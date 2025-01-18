@@ -1,0 +1,5 @@
+{
+  "cmd": ["/Users/coreyschafer/tutorial/bin/python", "-u", "$file"],
+  "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+  "quiet": true
+}

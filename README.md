@@ -38,7 +38,7 @@ By using these scripts, you acknowledge and accept the risk of potential data lo
 
 1. Clone the repository to your local machine:
    ```sh
-   git clone https://github.com/CoreyMSchafer/dotfiles.git ~/dotfiles
+   git clone https://github.com/ocrosby/dotfiles.git ~/dotfiles
    ```
 2. Navigate to the `dotfiles` directory:
    ```sh

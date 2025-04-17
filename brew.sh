@@ -29,15 +29,8 @@ brew cleanup
 
 # Define an array of packages to install using Homebrew.
 packages=(
-    "python"
-    "tcl-tk"
-    "python-tk"
-    "bash"
-    "zsh"
     "git"
     "tree"
-    "pylint"
-    "black"
     "node"
 )
 
@@ -99,18 +92,16 @@ $(brew --prefix)/bin/npm install --global prettier
 # Define an array of applications to install using Homebrew Cask.
 apps=(
     "google-chrome"
-    "firefox"
+    "firefox-developer-edition"
     "brave-browser"
     "sublime-text"
     "visual-studio-code"
-    "spotify"
-    "discord"
-    "google-drive"
-    "gimp"
-    "vlc"
-    "rectangle"
     "postman"
-    "keyboardcleantool"
+    "openlens"
+    "nvm"
+    "gh"
+    "awscli"
+    "kubectl"
 )
 
 # Loop over the array to install each application.

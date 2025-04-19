@@ -12,6 +12,14 @@ Click on the image below to watch the video on YouTube:
 
 The setup includes automated scripts for installing essential software, configuring Bash and Zsh shells, and setting up Sublime Text and Visual Studio Code editors. This guide will help you replicate my development environment on your machine if you desire to do so.
 
+## Ghostty
+
+Since I included my ghostty config in my dotfiles repo after cloing dotfiles to ~/dotfiles you need to link the ghostty config like this
+
+```shell
+ln -s ~/dotfiles/ghostty ~/.config/ghostty
+```
+
 ## Important Note Before Installation
 
 **WARNING:** The configurations and scripts in this repository are **HIGHLY PERSONALIZED** to my own preferences and workflows. If you decide to use them, please be aware that they will **MODIFY** your current system, potentially making some changes that are **IRREVERSIBLE** without a fresh installation of your operating system.

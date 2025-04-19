@@ -1,0 +1,30 @@
+[theme]
+name = "Catppuccin Mocha"
+
+[colors]
+foreground = "#cdd6f4"
+background = "#1e1e2e"
+cursor = "#f5e0dc"
+selection-background = "#313244"
+
+ansi = [
+  "#45475a", # Black
+  "#f38ba8", # Red
+  "#a6e3a1", # Green
+  "#f9e2af", # Yellow
+  "#89b4fa", # Blue
+  "#f5c2e7", # Magenta
+  "#94e2d5", # Cyan
+  "#bac2de", # White
+]
+
+bright = [
+  "#585b70", # Bright Black
+  "#f38ba8", # Bright Red
+  "#a6e3a1", # Bright Green
+  "#f9e2af", # Bright Yellow
+  "#89b4fa", # Bright Blue
+  "#f5c2e7", # Bright Magenta
+  "#94e2d5", # Bright Cyan
+  "#a6adc8", # Bright White
+]

@@ -1,0 +1,35 @@
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser(description="Calculate steps and miles needed to overtake a Wellable competitor.")
+    parser.add_argument("current_points", type=float, help="Your current Wellable points.")
+    parser.add_argument("target_points", type=float, help="Your target's Wellable points.")
+
+    args = parser.parse_args()
+
+    current_points = args.current_points
+    target_points = args.target_points
+
+    # Constants
+    POINTS_PER_STEP = 0.05
+    STEPS_PER_MILE = 2256
+
+    # Calculate difference
+    point_difference = target_points - current_points
+
+    if point_difference < 0:
+        print("You have already overtaken your target!")
+        return
+
+    # Calculate steps needed
+    steps_needed = point_difference / POINTS_PER_STEP
+
+    # Calculate miles needed
+    miles_needed = steps_needed / STEPS_PER_MILE
+
+    print(f"You need approximately {int(steps_needed)} steps to overtake your target.")
+    print(f"That's approximately {miles_needed:.2f} miles on the treadmill.")
+
+if __name__ == "__main__":
+    main()
+

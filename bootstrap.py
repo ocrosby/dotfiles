@@ -5,17 +5,20 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# --- Configuration ---
-HOME = Path.home()
-DOTFILES_DIR = HOME / "dotfiles"
+# --- Configuration (edit these for your own dotfiles) ---
 
-# --- Define your symlinks here ---
-# Each tuple is: (source relative to dotfiles, destination relative to $HOME)
+GIT_REPO = "git@github.com:ocrosby/dotfiles.git"  # <--- 🔥 Change this for your own dotfiles repo
+DOTFILES_DIR = Path.home() / "dotfiles"
+
+# Define source -> destination symlinks
+# Each entry is (source relative to dotfiles repo, destination relative to $HOME)
 SYMLINKS = [
     ("tmux/tmux.conf", ".tmux.conf"),
     ("ghostty", ".config/ghostty"),
-    ("bin", "bin"),
+    ("bin", "bin"),  # links ~/bin -> ~/dotfiles/bin
 ]
+
+# --- Utility Functions ---
 
 def run(command, cwd=None):
     """Run a shell command and exit on failure."""
@@ -26,11 +29,13 @@ def run(command, cwd=None):
         exit(1)
 
 def clone_dotfiles():
+    """Clone the dotfiles repository if not already present."""
     if not DOTFILES_DIR.exists():
-        print("📦 Cloning dotfiles repo...")
-        run(f"git clone --recurse-submodules git@github.com:ocrosby/dotfiles.git {DOTFILES_DIR}")
+        print(f"📦 Cloning dotfiles repo from {GIT_REPO}...")
+        run(f"git clone --recurse-submodules {GIT_REPO} {DOTFILES_DIR}")
 
 def init_submodules():
+    """Initialize git submodules."""
     print("🔄 Initializing git submodules...")
     run("git submodule update --init --recursive", cwd=DOTFILES_DIR)
 
@@ -46,8 +51,9 @@ def symlink(source: Path, destination: Path):
     print(f"🔗 Linking {destination} -> {source}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.symlink_to(source)
-        
+
 def main():
+    """Main bootstrap logic."""
     print("🚀 Bootstrapping your environment...")
 
     clone_dotfiles()
@@ -55,9 +61,8 @@ def main():
 
     for src_rel, dest_rel in SYMLINKS:
         source = DOTFILES_DIR / src_rel
-        destination = HOME / dest_rel
+        destination = Path.home() / dest_rel
         symlink(source, destination)
 
 if __name__ == "__main__":
     main()
-

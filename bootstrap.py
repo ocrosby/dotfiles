@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Note: This script assumes you have a repository in your user account named `dotfiles` if you don't create one now then attempt to run this script.
+
 import os
 import shutil
 import subprocess
@@ -28,11 +30,30 @@ def run(command, cwd=None):
         print(f"❌ Command failed: {command}")
         exit(1)
 
-def clone_dotfiles():
+def get_git_username():
+    """Try to get the git user's name from global git config."""
+    username = run("git config --global github.user", capture_output=True)
+    if not username:
+        # Try user.name as fallback
+        username = run("git config --global user.name", capture_output=True)
+        if username:
+            username = username.replace(" ", "") # Remove spaces if needed
+
+    if not username:
+        print("Could not determine GitHub username automatically.")
+        username = input("Please enter your GitHub username: ").strip()
+
+    return username
+
+def get_git_repo(username: str):
+    """Construct the git repo URL based on username."""
+    return f"git@github.com:{username}/dotfiles.git"
+
+def clone_dotfiles(git_repo: str):
     """Clone the dotfiles repository if not already present."""
     if not DOTFILES_DIR.exists():
-        print(f"📦 Cloning dotfiles repo from {GIT_REPO}...")
-        run(f"git clone --recurse-submodules {GIT_REPO} {DOTFILES_DIR}")
+        print(f"📦 Cloning dotfiles repo from {git_repo}...")
+        run(f"git clone --recurse-submodules {git_repo} {DOTFILES_DIR}")
 
 def init_submodules():
     """Initialize git submodules."""
@@ -56,7 +77,10 @@ def main():
     """Main bootstrap logic."""
     print("🚀 Bootstrapping your environment...")
 
-    clone_dotfiles()
+    username = get_git_username()
+    git_repo = get_git_repo(username)
+
+    clone_dotfiles(git_repo)
     init_submodules()
 
     for src_rel, dest_rel in SYMLINKS:

@@ -93,3 +93,7 @@ This project is licensed under the MIT License - see the [LICENSE-MIT.txt](LICEN
 
 -  I originally forked this from [Mathias Bynens' dotfiles](https://github.com/mathiasbynens/dotfiles)
 -  Thanks to all the open-source projects used in this setup.
+
+## References
+
+- [Dotfiles](https://dotfiles.github.io/)

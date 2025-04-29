@@ -97,3 +97,5 @@ This project is licensed under the MIT License - see the [LICENSE-MIT.txt](LICEN
 ## References
 
 - [Dotfiles](https://dotfiles.github.io/)
+- [Another Reference Repo](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbUtOOThkcDFxSFI2RHFjU0tmQ2FqUHhFYzdmZ3xBQ3Jtc0tsNFpyOTIzRG9pTzc0Z1FrM3BpX2t4UkhVTUxhcWdYWXNjLU91aTJDWmtLbkYxaE5wbXlrQ0RHWTNiNEs1Qzc3LWUzUDM5aTJDS0hOWXhtSWNpTHJ0cnZXalZLdURyMm1DTUpialBTdXRIOWpXZlo2aw&q=https%3A%2F%2Fgithub.com%2Flinkarzu%2Fdotfiles-latest&v=XBjfzySpGdE)
+

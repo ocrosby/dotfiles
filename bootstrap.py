@@ -22,20 +22,42 @@ SYMLINKS = [
 
 # --- Utility Functions ---
 
-def run(command, cwd=None):
+def run(command, cwd=None, capture_output=False, check=True):
     """Run a shell command and exit on failure."""
     print(f"🔧 Running: {command}")
-    result = subprocess.run(command, shell=True, cwd=cwd)
-    if result.returncode != 0:
+
+    if capture_output:
+          result = subprocess.run(
+              command, 
+              shell=True, 
+              cwd=cwd, 
+              capture_output=capture_output, 
+              text=True
+          )
+    else:
+        result = subprocess.run(command, shell=True, cwd=cwd)
+
+    if check and result.returncode != 0:
         print(f"❌ Command failed: {command}")
         exit(1)
 
+    return result.stdout.strip() if capture_output else None
+
+
 def get_git_username():
     """Try to get the git user's name from global git config."""
-    username = run("git config --global github.user", capture_output=True)
+    username = run(
+        "git config --global github.user", 
+        capture_output=True, 
+        check=False
+    )
     if not username:
         # Try user.name as fallback
-        username = run("git config --global user.name", capture_output=True)
+        username = run(
+            "git config --global user.name", 
+            capture_output=True, 
+            check=False
+        )
         if username:
             username = username.replace(" ", "") # Remove spaces if needed
 
@@ -87,6 +109,9 @@ def main():
         source = DOTFILES_DIR / src_rel
         destination = Path.home() / dest_rel
         symlink(source, destination)
+
+
+    print("🎉 Dotfiles bootstrapped successfully!")
 
 if __name__ == "__main__":
     main()

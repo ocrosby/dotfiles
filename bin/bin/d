@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Diff
+if [ -z "$1" ]; then
+  echo "Error: No file provided."
+  echo "Usage: d <file>"
+  exit 1
+fi
+
+# Run the git commands
+git diff $1
+

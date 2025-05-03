@@ -31,8 +31,20 @@ then use GNU stow to create symlinks
 
 ```shell
 cd ~/dotfiles
-stow .
+stow */
 ```
+
+Note: when using stow it seems that things work better when I invoke stow on a package by package basis.
+
+So instead of `stow */` to setup directories I will tend to utilize.
+
+```shell
+stow shell
+stow bin
+stow tmux
+stow config
+```
+
 
 ## References
 

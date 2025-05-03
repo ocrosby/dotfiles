@@ -24,10 +24,9 @@ First, check out the `dotfiles` repo in your $HOME directory using git
 
 ```shell
 git clone https://github.com/ocrosby/dotfiles ~/dotfiles
-cd ~/dotfiles
 ```
 
-then use GNU stow to create symlinks
+Once the `dotfiles` directory is cloned, use GNU stow to create symlinks
 
 ```shell
 cd ~/dotfiles

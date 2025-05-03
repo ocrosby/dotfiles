@@ -1,4 +1,4 @@
 alias ll="ls -la"
 
-export PATH="~/bin:${PATH}"
+export PATH="$HOME/bin:$PATH"
 

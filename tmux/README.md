@@ -1,5 +1,0 @@
-# Tmux Configuration
-
-
-
-

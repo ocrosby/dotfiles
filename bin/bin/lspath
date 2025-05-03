@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#echo $PATH | sed 's/:/\n/g'
+
+# The translate command is apparently more portable than the various implementations of sed.
+echo "$PATH" | tr ':' '\n'
+
+

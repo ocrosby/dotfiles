@@ -34,20 +34,12 @@ cd ~/dotfiles
 stow */
 ```
 
-Note: when using stow it seems that things work better when I invoke stow on a package by package basis.
-
-So instead of `stow */` to setup directories I will tend to utilize.
-
-```shell
-stow shell
-stow bin
-stow tmux
-stow config
-```
+Note: It is important that you include the `/` after the `*` character in the stow command due how stow works.
 
 
 ## References
 
+- [GNU Stow](https://www.gnu.org/software/stow/)
 - [Stow has forever changed the way I manage my dotfiles](https://www.youtube.com/watch?v=y6XCebnB9gs)
 
 

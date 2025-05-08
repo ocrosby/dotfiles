@@ -40,7 +40,7 @@ fi
 
 if [ ! -d "$HOME/.config/nvim-yoda" ]; then
     echo "Cloning my Yoda distribution ..."
-    git clone https://github.com/jedi-knights/yoda.git "$HOME/.config/nvim-yoda"
+    git clone https://github.com/jedi-knights/yoda.nvim.git "$HOME/.config/nvim-yoda"
 fi
 
 

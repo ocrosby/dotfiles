@@ -19,6 +19,16 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
+" Highlight trailing whitespace
+match ErrorMsg '\s\+$'
+
+" Enable line wrapping
+set wrap
+
+" Enable code folding based on indentation
+set foldmethod=indent
+set foldlevel=99
+
 " Remap jk to escape insert mode
 inoremap jk <Esc>
 

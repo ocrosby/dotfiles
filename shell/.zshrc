@@ -7,6 +7,7 @@ alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
 alias nvim-chad='NVIM_APPNAME="nvim-chad" nvim'
 alias nvim-lunar='NVIM_APPNAME="nvim-lunar" nvim'
 alias nvim-lazy='NVIM_APPNAME="nvim-lazy" nvim'
+alias yoda='NVIM_APPNAME="nvim-yoda" nvim'
 
 if [ ! -d "$HOME/.config/nvim-kickstart" ]; then
     echo "Cloning kickstart.nvim repository ..."

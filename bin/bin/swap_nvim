@@ -1,0 +1,17 @@
+#!/bin/bash
+CONFIG_DIR=~/.config/nvim
+PERSONAL_DIR=~/.config/nvim-personal
+DISTRO_DIR=~/.config/nvim-distro
+
+if [ "$1" == "personal" ]; then
+    rm -rf $CONFIG_DIR
+    ln -s $PERSONAL_DIR $CONFIG_DIR
+    echo "Switched to personal config."
+elif [ "$1" == "distro" ]; then
+    rm -rf $CONFIG_DIR
+    ln -s $DISTRO_DIR $CONFIG_DIR
+    echo "Switched to distro config."
+else
+    echo "Usage: swap_nvim.sh [personal|distro]"
+fi
+

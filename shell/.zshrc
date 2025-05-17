@@ -47,6 +47,11 @@ fi
 
 export PATH="$HOME/bin:$PATH"
 
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+
 # Source private file if it exists
 if [ -f "$HOME/.zshrc.private" ]; then
     source "$HOME/.zshrc.private"

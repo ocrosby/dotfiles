@@ -52,3 +52,5 @@ if [ -f "$HOME/.zshrc.private" ]; then
     source "$HOME/.zshrc.private"
 fi
 
+export TERM=xterm-256color
+

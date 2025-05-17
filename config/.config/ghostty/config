@@ -3,3 +3,6 @@ font-family = "JetBrains Nerd Font"
 font-size = 14
 theme = "tokyonight"
 
+[env]
+TERM = "xterm-256color"
+

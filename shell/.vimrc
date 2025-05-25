@@ -31,4 +31,5 @@ set foldlevel=99
 
 " Remap jk to escape insert mode
 inoremap jk <Esc>
+inoremap jj <Esc>
 

@@ -21,5 +21,8 @@ export PATH="$HOME/bin:$GOPATH/bin:/usr/local/go/bin:/opt/homebrew/opt/openjdk/b
 # ────────[ Load Setup Logic ]────────
 [ -f "$HOME/.zsh.setup" ] && source "$HOME/.zsh.setup"
 
+# ────────[ Dotfiles Utility ]────────
+alias setup-dev-env="source ~/.zsh.setup"
+
 # ────────[ Load Private Secrets/Overrides ]────────
 [ -f "$HOME/.zshrc.private" ] && source "$HOME/.zshrc.private"

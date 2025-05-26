@@ -1,32 +1,62 @@
 #!/bin/zsh
 
-# ────────[ Utility Functions ]────────
+# ────────[ Logging Setup ]────────
+
+LOG_DATE=$(date +%F)
+LOGFILE="$HOME/.zsh.setup.$LOG_DATE.log"
+
+timestamp() { date +%F\ %T; }
+
+log() {
+  echo "$(timestamp) - $1" | tee -a "$LOGFILE"
+}
 
 have() { command -v "$1" >/dev/null 2>&1; }
+
+# ────────[ Installer ]────────
 
 install_if_missing() {
   local cmd="$1"
   local brew_pkg="${2:-$1}"
   if ! have "$cmd"; then
-    echo "Installing $brew_pkg..."
-    brew install "$brew_pkg" >/dev/null 2>&1
+    log "📦 Installing $brew_pkg..."
+    if brew install "$brew_pkg" >/dev/null 2>&1; then
+      log "✅ Installed $brew_pkg"
+    else
+      log "❌ Failed to install $brew_pkg"
+    fi
   elif [ "$DOTFILES_VERBOSE" = true ]; then
-    echo "$cmd is already installed."
+    log "ℹ️ $cmd is already installed."
   fi
 }
+
+# ────────[ Repo Cloner ]────────
 
 clone_if_missing() {
   local name="$1"
   local repo="$2"
   local path="$HOME/.config/nvim-$name"
   if [ ! -d "$path" ]; then
-    echo "$(date +%F\ %T) - Cloning $name from $repo ..."
-    git clone "$repo" "$path"
+    log "🌱 Cloning $name from $repo..."
+    if git clone "$repo" "$path" >/dev/null 2>&1; then
+      log "✅ Cloned $name to $path"
+    else
+      log "❌ Failed to clone $name"
+    fi
+  elif [ "$DOTFILES_VERBOSE" = true ]; then
+    log "ℹ️ $name already exists at $path"
   fi
 }
 
-# ────────[ Neovim Configurations ]────────
+# ────────[ Execution Begins ]────────
 
+log "──────────────────────────"
+log "🛠️  ZSH Setup Started"
+log "──────────────────────────"
+
+# ────────[ Neovim Configs ]────────
+
+log "🔧 Cloning Neovim configurations..."
 clone_if_missing "kickstart" "https://github.com/nvim-lua/kickstart.nvim.git"
 clone_if_missing "astro"     "https://github.com/AstroNvim/AstroNvim.git"
 clone_if_missing "chad"      "https://github.com/NvChad/NvChad.git"
@@ -35,8 +65,9 @@ clone_if_missing "lazy"      "https://github.com/LazyVim/LazyVim.git"
 clone_if_missing "personal"  "https://github.com/ocrosby/nvim.git"
 clone_if_missing "yoda"      "https://github.com/jedi-knights/yoda.nvim.git"
 
-# ────────[ Required CLI Tools ]────────
+# ────────[ CLI Tools ]────────
 
+log "🔧 Installing CLI tools..."
 install_if_missing wget
 install_if_missing rg ripgrep
 install_if_missing php
@@ -48,15 +79,23 @@ install_if_missing fd
 install_if_missing tree
 install_if_missing viu
 install_if_missing chafa
-install_if_missing neovim
 
 # ────────[ NVM Setup ]────────
 
+log "🔧 Setting up NVM..."
 if ! have nvm; then
-  echo "Installing nvm..."
-  brew install nvm >/dev/null 2>&1
+  log "📦 Installing nvm..."
+  if brew install nvm >/dev/null 2>&1; then
+    log "✅ Installed nvm"
+  else
+    log "❌ Failed to install nvm"
+  fi
+else
+  log "ℹ️ nvm is already installed."
 fi
 
 mkdir -p "$NVM_DIR"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && source "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+log "✅ ZSH setup complete."

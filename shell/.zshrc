@@ -47,6 +47,34 @@ fi
 
 export PATH="$HOME/bin:$PATH"
 
+
+# Helper: install package if missing
+install_if_missing() {
+  local cmd="$1"
+  local brew_pkg="${2:-$1}"
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "Installing $brew_pkg..."
+    brew install "$brew_pkg"
+  else
+    echo "$cmd is already installed."
+  fi
+}
+
+# Install tools if not present
+install_if_missing wget
+install_if_missing rg ripgrep
+install_if_missing php
+install_if_missing rustup-init rust
+
+# Special handling for nvm
+if ! command -v nvm >/dev/null 2>&1; then
+  echo "Installing nvm..."
+  brew install nvm
+  export NVM_DIR="$HOME/.nvm"
+  mkdir -p "$NVM_DIR"
+  source "$(brew --prefix nvm)/nvm.sh"
+fi
+
 # Source private file if it exists
 if [ -f "$HOME/.zshrc.private" ]; then
     source "$HOME/.zshrc.private"

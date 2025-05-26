@@ -34,12 +34,10 @@ clone_if_missing "yoda"      "https://github.com/jedi-knights/yoda.nvim.git"
 # ────────[ Homebrew Installers ]────────
 install_if_missing() {
   local cmd="$1"
-  local pkg="${2:-$1}"
+  local brew_pkg="${2:-$1}"
   if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "Installing $pkg..."
-    brew install "$pkg"
-  else
-    echo "$cmd is already installed."
+    echo "Installing $brew_pkg..."
+    brew install "$brew_pkg"
   fi
 }
 
@@ -47,11 +45,14 @@ install_if_missing() {
 install_if_missing wget
 install_if_missing rg ripgrep
 install_if_missing php
-install_if_missing rustup-init rust
+install_if_missing cargo rust
 install_if_missing julia
 install_if_missing go
 install_if_missing composer
 install_if_missing fd
+install_if_missing tree
+install_if_missing viu
+install_if_missing chafa
 
 # ────────[ NVM Setup ]────────
 if ! command -v nvm >/dev/null 2>&1; then

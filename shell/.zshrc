@@ -75,10 +75,25 @@ if ! command -v nvm >/dev/null 2>&1; then
   source "$(brew --prefix nvm)/nvm.sh"
 fi
 
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+
 # Source private file if it exists
 if [ -f "$HOME/.zshrc.private" ]; then
     source "$HOME/.zshrc.private"
 fi
 
 export TERM=xterm-256color
+
+
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
 

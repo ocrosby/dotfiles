@@ -1,99 +1,86 @@
+# ────────[ Aliases ]────────
 alias ll="ls -la"
 alias gti="git"
-alias nvim-personal='NVIM_APPNAME="nvim-personal" nvim'
-alias nvim-yoda='NVIM_APPNAME="nvim-yoda" nvim'
-alias nvim-kickstart='NVIM_APPNAME="nvim-kickstart" nvim'
-alias nvim-astro='NVIM_APPNAME="nvim-astro" nvim'
-alias nvim-chad='NVIM_APPNAME="nvim-chad" nvim'
-alias nvim-lunar='NVIM_APPNAME="nvim-lunar" nvim'
-alias nvim-lazy='NVIM_APPNAME="nvim-lazy" nvim'
+
+# Define common Neovim setups
+for variant in personal yoda kickstart astro chad lunar lazy; do
+  alias "nvim-${variant}"="NVIM_APPNAME=\"nvim-${variant}\" nvim"
+done
+
 alias yoda='NVIM_APPNAME="nvim-yoda" nvim'
 
-if [ ! -d "$HOME/.config/nvim-kickstart" ]; then
-    echo "Cloning kickstart.nvim repository ..."
-    git clone https://github.com/nvim-lua/kickstart.nvim.git "$HOME/.config/nvim-kickstart"
-fi
 
-if [ ! -d "$HOME/.config/nvim-astro" ]; then
-    echo "Cloning the AstroNvim repository ..."
-    git clone https://github.com/AstroNvim/AstroNvim.git "$HOME/.config/nvim-astro"
-fi
+# ────────[ Clone Neovim Configs If Missing ]────────
+clone_if_missing() {
+  local name="$1"
+  local repo="$2"
+  local path="$HOME/.config/nvim-$name"
 
-if [ ! -d "$HOME/.config/nvim-chad" ]; then
-    echo "Cloning the NvChad repository ..."
-    git clone https://github.com/NvChad/NvChad.git "$HOME/.config/nvim-chad"
-fi
+  if [ ! -d "$path" ]; then
+    echo "Cloning $name from $repo ..."
+    git clone "$repo" "$path"
+  fi
+}
 
-if [ ! -d "$HOME/.config/nvim-lunar" ]; then
-    echo "Cloning the LunarVim repository ..."
-    git clone https://github.com/LunarVim/LunarVim.git "$HOME/.config/nvim-lunar"
-fi
-
-if [ ! -d "$HOME/.config/nvim-lazy" ]; then
-    echo "Cloning the LazyVim repository ..."
-    git clone https://github.com/LazyVim/LazyVim.git "$HOME/.config/nvim-lazy"
-fi
-
-if [ ! -d "$HOME/.config/nvim-personal" ]; then
-    echo "Cloning my personal Neovim configuration ..."
-    git clone https://github.com/ocrosby/nvim.git "$HOME/.config/nvim-personal"
-fi
-
-if [ ! -d "$HOME/.config/nvim-yoda" ]; then
-    echo "Cloning my Yoda distribution ..."
-    git clone https://github.com/jedi-knights/yoda.nvim.git "$HOME/.config/nvim-yoda"
-fi
+clone_if_missing "kickstart" "https://github.com/nvim-lua/kickstart.nvim.git"
+clone_if_missing "astro"     "https://github.com/AstroNvim/AstroNvim.git"
+clone_if_missing "chad"      "https://github.com/NvChad/NvChad.git"
+clone_if_missing "lunar"     "https://github.com/LunarVim/LunarVim.git"
+clone_if_missing "lazy"      "https://github.com/LazyVim/LazyVim.git"
+clone_if_missing "personal"  "https://github.com/ocrosby/nvim.git"
+clone_if_missing "yoda"      "https://github.com/jedi-knights/yoda.nvim.git"
 
 
-export PATH="$HOME/bin:$PATH"
-
-
-# Helper: install package if missing
+# ────────[ Homebrew Installers ]────────
 install_if_missing() {
   local cmd="$1"
-  local brew_pkg="${2:-$1}"
+  local pkg="${2:-$1}"
   if ! command -v "$cmd" >/dev/null 2>&1; then
-    echo "Installing $brew_pkg..."
-    brew install "$brew_pkg"
+    echo "Installing $pkg..."
+    brew install "$pkg"
   else
     echo "$cmd is already installed."
   fi
 }
 
-# Install tools if not present
+# Core tools
 install_if_missing wget
 install_if_missing rg ripgrep
 install_if_missing php
 install_if_missing rustup-init rust
+install_if_missing julia
+install_if_missing go
+install_if_missing composer
+install_if_missing fd
 
-# Special handling for nvm
+# ────────[ NVM Setup ]────────
 if ! command -v nvm >/dev/null 2>&1; then
   echo "Installing nvm..."
   brew install nvm
-  export NVM_DIR="$HOME/.nvm"
-  mkdir -p "$NVM_DIR"
-  source "$(brew --prefix nvm)/nvm.sh"
 fi
-
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-
-
-# Source private file if it exists
-if [ -f "$HOME/.zshrc.private" ]; then
-    source "$HOME/.zshrc.private"
-fi
-
-export TERM=xterm-256color
-
 
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+mkdir -p "$NVM_DIR"
+
+# Use Homebrew nvm integration
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && source "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 
+# ────────[ GOPATH / Go Setup ]────────
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+
+
+# ────────[ Java Setup ]────────
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-
 export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
 
+
+# ────────[ Misc ]────────
+export PATH="$HOME/bin:$PATH"
+export TERM=xterm-256color
+
+# Private file
+[ -f "$HOME/.zshrc.private" ] && source "$HOME/.zshrc.private"

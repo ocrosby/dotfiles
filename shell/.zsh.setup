@@ -50,13 +50,9 @@ clone_if_missing() {
 
 # ────────[ Execution Begins ]────────
 
-log "──────────────────────────"
-log "🛠️  ZSH Setup Started"
-log "──────────────────────────"
 
 # ────────[ Neovim Configs ]────────
 
-log "🔧 Cloning Neovim configurations..."
 clone_if_missing "kickstart" "https://github.com/nvim-lua/kickstart.nvim.git"
 clone_if_missing "astro"     "https://github.com/AstroNvim/AstroNvim.git"
 clone_if_missing "chad"      "https://github.com/NvChad/NvChad.git"
@@ -67,7 +63,6 @@ clone_if_missing "yoda"      "https://github.com/jedi-knights/yoda.nvim.git"
 
 # ────────[ CLI Tools ]────────
 
-log "🔧 Installing CLI tools..."
 install_if_missing wget
 install_if_missing rg ripgrep
 install_if_missing php
@@ -82,7 +77,6 @@ install_if_missing chafa
 
 # ────────[ NVM Setup ]────────
 
-log "🔧 Setting up NVM..."
 if ! have nvm; then
   log "📦 Installing nvm..."
   if brew install nvm >/dev/null 2>&1; then
@@ -90,12 +84,9 @@ if ! have nvm; then
   else
     log "❌ Failed to install nvm"
   fi
-else
-  log "ℹ️ nvm is already installed."
 fi
 
 mkdir -p "$NVM_DIR"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && source "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && source "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
-log "✅ ZSH setup complete."

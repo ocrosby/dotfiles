@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+# dotfiles/shell/.zsh.setup
+
 # ────────[ Logging Setup ]────────
 
 LOG_DATE=$(date +%F)

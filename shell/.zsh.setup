@@ -79,9 +79,9 @@ install_if_missing chafa
 
 # ────────[ NVM Setup ]────────
 
-if ! have nvm; then
+if ! have nvim; then
   log "📦 Installing nvm..."
-  if brew install nvm >/dev/null 2>&1; then
+  if brew install neovim >/dev/null 2>&1; then
     log "✅ Installed nvm"
   else
     log "❌ Failed to install nvm"

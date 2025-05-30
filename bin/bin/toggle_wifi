@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+echo "Toggling Wifi"
+echo "Disabling Wifi ..."
+networksetup -setairportpower en0 off
+sleep 2
+echo "Enabling Wifi ..."
+networksetup -setairportpower en0 on
+echo "Wifi Successfully Toggled"
+

@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+
+import subprocess
+import time
+import sys
+
+
+def get_wifi_interface():
+    """
+    Detects the Wi-Fi interface (e.g., en0) by parsing the output of
+    `networksetup -listallhardwareports`. Returns the interface name.
+    """
+    print("🔍 Detecting Wi-Fi interface...")
+    try:
+        result = subprocess.run(
+            ["/usr/sbin/networksetup", "-listallhardwareports"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        lines = result.stdout.splitlines()
+        for i in range(len(lines)):
+            if "Wi-Fi" in lines[i]:
+                iface = lines[i + 1].split()[-1]
+                print(f"✅ Wi-Fi interface detected: {iface}")
+                return iface
+        print("❌ Could not detect Wi-Fi interface.")
+        sys.exit(1)
+    except subprocess.CalledProcessError:
+        print("❌ Failed to retrieve hardware ports.")
+        sys.exit(1)
+
+
+def get_default_gateway():
+    """
+    Retrieves the default gateway IP address by parsing the output of
+    `route get default`. Returns the IP address as a string.
+    """
+    print("🔍 Retrieving default gateway...")
+    try:
+        result = subprocess.run(
+            ["route", "get", "default"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        for line in result.stdout.splitlines():
+            if "gateway:" in line:
+                gateway = line.split()[1]
+                print(f"✅ Gateway found: {gateway}")
+                return gateway
+        print("❌ Gateway not found in route output.")
+        sys.exit(1)
+    except subprocess.CalledProcessError:
+        print("❌ Failed to get default route.")
+        sys.exit(1)
+
+
+def is_gateway_reachable(gateway):
+    """
+    Attempts to ping the given gateway to check connectivity.
+    Returns True if reachable, False otherwise.
+    """
+    print(f"📡 Checking connectivity to gateway: {gateway}...")
+    try:
+        subprocess.run(
+            ["ping", "-c", "1", "-W", "1", gateway],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+        print("✅ Gateway reachable. No action needed.")
+        return True
+    except subprocess.CalledProcessError:
+        print("⚠️ Unable to reach gateway.")
+        return False
+
+
+def toggle_wifi(interface):
+    """
+    Turns the Wi-Fi interface off, waits for 2 seconds, then turns it back on
+    using `networksetup -setairportpower`.
+    """
+    print(f"📴 Turning off Wi-Fi on {interface}...")
+    subprocess.run(["networksetup", "-setairportpower", interface, "off"])
+    time.sleep(2)
+    print(f"📶 Turning Wi-Fi back on...")
+    subprocess.run(["networksetup", "-setairportpower", interface, "on"])
+    print("✅ Wi-Fi toggled successfully.")
+
+
+def renew_dhcp(interface):
+    """
+    Requests a new DHCP lease on the given interface using
+    `ipconfig set <interface> DHCP`.
+    """
+    print(f"🔁 Renewing DHCP lease on {interface}...")
+    subprocess.run(["sudo", "ipconfig", "set", interface, "DHCP"])
+    print("✅ DHCP lease requested.")
+
+
+def main():
+    """
+    Main script logic:
+    - Detect Wi-Fi interface and gateway
+    - Check if the gateway is reachable
+    - If not, toggle Wi-Fi and renew DHCP lease
+    """
+    print("🚀 Starting Wi-Fi health check...")
+    interface = get_wifi_interface()
+    gateway = get_default_gateway()
+
+    if not is_gateway_reachable(gateway):
+        toggle_wifi(interface)
+        renew_dhcp(interface)
+        print("🔄 Wi-Fi reset completed. Please wait a few seconds for reconnection.")
+
+
+if __name__ == "__main__":
+    main()

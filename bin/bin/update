@@ -1,5 +1,18 @@
 #!/usr/bin/env zsh
 
-brew upgrade
 brew update
+brew upgrade
+
+pushd ~/dotfiles
+git pull --rebase
+stow */
+popd
+
+pushd ~/Documents/Obsidian
+git pull --rebase
+popd
+
+pushd ~/.config/nvim-yoda
+git pull --rebase
+popd
 

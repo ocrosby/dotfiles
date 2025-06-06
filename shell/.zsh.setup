@@ -77,6 +77,8 @@ install_if_missing tree
 install_if_missing viu
 install_if_missing chafa
 install_if_missing fzf
+install_if_missing hg
+install_if_missing just
 
 # ────────[ NVM Setup ]────────
 

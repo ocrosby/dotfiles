@@ -79,8 +79,8 @@ install_if_missing chafa
 install_if_missing fzf
 install_if_missing hg
 install_if_missing just
-install_if_missing rust
-install_if_missing nvm
+#install_if_missing rust
+#install_if_missing nvm
 
 # ────────[ NVM Setup ]────────
 

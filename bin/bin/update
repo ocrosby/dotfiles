@@ -1,18 +1,26 @@
 #!/usr/bin/env zsh
 
+echo "Updating Homebrew ..."
 brew update
 brew upgrade
+echo "Done"
 
+echo "Updating ~/dotfiles ..."
 pushd ~/dotfiles
 git pull --rebase
 stow */
 popd
+echo "Done"
 
+echo "Updating ~/Documents/Obsidian ..."
 pushd ~/Documents/Obsidian
 git pull --rebase
 popd
+echo "Done"
 
+echo "Updating ~/.config/nvim-yoda ..."
 pushd ~/.config/nvim-yoda
 git pull --rebase
 popd
+echo "Done"
 

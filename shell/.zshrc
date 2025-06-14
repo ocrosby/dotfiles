@@ -26,3 +26,6 @@ alias setup-dev-env="source ~/.zsh.setup"
 
 # ────────[ Load Private Secrets/Overrides ]────────
 [ -f "$HOME/.zshrc.private" ] && source "$HOME/.zshrc.private"
+
+unset VIMRUNTIME
+

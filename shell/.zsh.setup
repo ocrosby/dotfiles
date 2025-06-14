@@ -81,6 +81,15 @@ install_if_missing hg
 install_if_missing just
 #install_if_missing rust
 #install_if_missing nvm
+#install_if_missing imagemagick
+#install_if_missing ghostscript
+#install_if_missing tectonic
+
+# This failed via homebrew but I was successfully able to install it via 
+# npm:
+# > npm install -g @mermaid-js/mermaid-cli
+
+#install_if_missing mermaid-cli
 
 # ────────[ NVM Setup ]────────
 

@@ -43,6 +43,6 @@
   },
 
   "prompts": {
-    "baseline": "~/.cursor/prompts.md"
+    "baseline": ".cursor/prompts.md"
   }
 }

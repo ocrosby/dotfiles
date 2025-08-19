@@ -1,0 +1,48 @@
+{
+  "defaultModel": "auto",
+  "models": {
+    "auto": { "provider": "openai", "name": "auto" },
+    "gpt-4o": { "provider": "openai", "name": "gpt-4o" },
+    "gpt-4.1": { "provider": "openai", "name": "gpt-4.1" }
+  },
+
+  "editor": {
+    "autoAgentMode": true,
+    "codeFormatting": {
+      "enabled": true,
+      "style": "prettier",
+      "printWidth": 100,
+      "semi": true,
+      "singleQuote": true,
+      "trailingComma": "all",
+      "tabWidth": 2
+    },
+    "linting": {
+      "enabled": true,
+      "tool": "eslint"
+    },
+    "typescript": {
+      "strictMode": true,
+      "usePaths": true
+    }
+  },
+
+  "preferences": {
+    "explainCodeByDefault": false,
+    "defaultLanguage": "typescript",
+    "writeTestsFirst": true,
+    "testFramework": "jest",
+    "saveConversations": true
+  },
+
+  "identity": {
+    "role": "Senior Software Engineer and Architect",
+    "experience": "30 years",
+    "tone": "pragmatic, professional, mentoring",
+    "style": "explain trade-offs, favor maintainability, apply DRY/SOLID, GoF patterns, testable code, and minimize cyclomatic complexity"
+  },
+
+  "prompts": {
+    "baseline": "~/.cursor/prompts.md"
+  }
+}

@@ -63,13 +63,68 @@ Use an output style when you want to **change how Claude responds** across an en
 | Rule | Scope | Description |
 |---|---|---|
 | `conventional-commits.md` | All files | Enforces Conventional Commits with Angular types (`feat`, `fix`, `docs`, etc.) |
-| `python-conventions.md` | `*.py`, `pyproject.toml`, `uv.lock` | Python standards: DRY/SOLID/CLEAN, rule of three, GoF patterns, DI, type hints, pytest + pytest-mock, uv, click for CLIs, hexagonal architecture for servers |
+| **Python** | | |
+| `py-conventions.md` | `**/*.py`, `pyproject.toml`, `uv.lock` | Python standards: DRY/SOLID/CLEAN, GoF patterns, DI, type hints, pytest, uv, click, hexagonal architecture, FastAPI, FastMCP |
+| `py-project-architecture.md` | `**/*.py`, `pyproject.toml` | Project structure: hexagonal layout, module responsibilities, design rules |
+| `py-docs.md` | `**/*.py`, `**/docs/**/*.md` | Google-style docstrings, README requirements, API documentation |
+| `py-testing.md` | `**/tests/**/*.py`, `**/test_*.py`, `**/conftest.py` | pytest conventions: structure, fixtures, FastAPI TestClient, anti-patterns |
+| **Go** | | |
+| `go-conventions.md` | `**/*.go`, `go.mod`, `go.sum` | Go standards: error handling, interfaces, naming, concurrency, idiomatic patterns |
+| `go-project-architecture.md` | `**/*.go`, `go.mod` | Project structure: cmd/internal layout, module responsibilities, design rules |
+| `go-docs.md` | `**/*.go` | Godoc conventions: doc comments, README requirements, API documentation |
+| `go-testing.md` | `**/*_test.go`, `**/testdata/**` | stdlib testing: table-driven tests, fakes, httptest, anti-patterns |
+| **Gherkin** | | |
+| `gherkin-conventions.md` | `**/*.feature` | BDD standards: declarative steps, Given/When/Then, Scenario Outlines, tags, anti-patterns |
+| `gherkin-structure.md` | `**/*.feature`, `**/steps/**`, `**/step_definitions/**` | Project structure: feature file organization, step definitions, hooks, support layer |
+| `gherkin-testing.md` | `**/steps/**`, `**/step_definitions/**`, `**/features/**` | Step definition conventions: thin steps, page objects, assertions, anti-patterns |
+| **Neovim** | | |
+| `nvim-lua.md` | `**/*.lua` | Lua & Neovim API conventions: modern API usage, keymaps, autocommands, idiomatic Lua, error handling, performance |
+| `nvim-plugin-architecture.md` | `**/*.lua` | Plugin structure: module layout, `setup()` patterns, dependency direction, lifecycle |
+| `nvim-docs.md` | `**/doc/*.txt` | Vimdoc format: sections, tags, references, formatting rules |
+| `nvim-testing.md` | `**/tests/**/*.lua`, `**/*_spec.lua` | Plugin testing with plenary.busted: structure, buffer helpers, anti-patterns |
 
 ### Skills
 
-| Skill | Auto-invoked | Description |
+| Skill | Scope | Description |
 |---|---|---|
-| `test-driven-development/` | Yes | Enforces red-green-refactor TDD cycle. Bundles `testing-anti-patterns.md` as a reference for common mocking and testing mistakes |
+| `test-driven-development/` | Auto-invoked | Enforces red-green-refactor TDD cycle. Bundles `testing-anti-patterns.md` as a reference |
+| **Python** | | |
+| `py-feature/` | `**/*.py` | Guides feature development — hexagonal architecture, FastAPI, FastMCP |
+| `py-migrate/` | `**/*.py` | Replaces outdated Python patterns with modern equivalents |
+| `py-debug-checklist/` | `**/*.py` | Systematically triages and diagnoses Python application bugs |
+| **Go** | | |
+| `go-feature/` | `**/*.go` | Guides feature development — clean architecture, idiomatic Go |
+| `go-migrate/` | `**/*.go` | Replaces deprecated Go patterns with modern equivalents |
+| `go-debug-checklist/` | `**/*.go` | Systematically triages and diagnoses Go application bugs |
+| **Gherkin** | | |
+| `gherkin-feature/` | `**/*.feature` | Guides writing feature files and step definitions following BDD best practices |
+| `gherkin-migrate/` | `**/*.feature` | Refactors anti-patterns: imperative steps, fat step definitions, scenario coupling |
+| `gherkin-debug-checklist/` | `**/*.feature` | Triages and diagnoses BDD test failures |
+| **Neovim** | | |
+| `nvim-feature/` | `**/*.lua` | Guides Neovim plugin feature development — API usage, structure, keymaps, autocommands |
+| `nvim-docs/` | `**/*.lua` | Generates plugin documentation in vimdoc format |
+| `nvim-migrate-api/` | `**/*.lua` | Replaces deprecated Neovim API calls with modern equivalents |
+| `nvim-debug-checklist/` | `**/*.lua` | Systematically triages and diagnoses Neovim plugin bugs |
+
+### Agents
+
+| Agent | Model | Tools | Description |
+|---|---|---|---|
+| **Python** | | | |
+| `py-architect` | opus | Read, Grep, Glob | Designs application architecture — hexagonal layout, dependency graph, API surface |
+| `py-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes bugs — tracebacks, root cause analysis |
+| `py-reviewer` | sonnet | Read, Grep, Glob | Reviews code for architecture, type safety, FastAPI patterns, idiomatic Python (plan mode) |
+| **Go** | | | |
+| `go-architect` | opus | Read, Grep, Glob | Designs application architecture — cmd/internal layout, dependency graph, API surface |
+| `go-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes bugs — panics, race conditions, goroutine leaks |
+| `go-reviewer` | sonnet | Read, Grep, Glob | Reviews code for error handling, concurrency safety, idiomatic Go (plan mode) |
+| **Gherkin** | | | |
+| `gherkin-architect` | opus | Read, Grep, Glob | Designs BDD test architecture — feature organization, step structure, tag strategy |
+| `gherkin-reviewer` | sonnet | Read, Grep, Glob | Reviews feature files for BDD best practices, declarative steps, maintainability (plan mode) |
+| **Neovim** | | | |
+| `nvim-architect` | opus | Read, Grep, Glob | Designs plugin architecture — module layout, dependency graph, public API surface |
+| `nvim-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes plugin bugs — root cause analysis, stack traces, state inspection |
+| `nvim-reviewer` | sonnet | Read, Grep, Glob | Reviews plugin code for correctness, deprecated APIs, performance, idiomatic patterns (plan mode) |
 
 ## References
 

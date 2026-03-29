@@ -41,6 +41,23 @@ Use hexagonal architecture (ports and adapters) for all servers:
 
 Keep the dependency direction inward: adapters depend on ports, ports depend on domain, domain depends on nothing.
 
+## REST APIs
+
+- Use FastAPI for all RESTful APIs
+- Define request/response models with Pydantic `BaseModel`
+- Use dependency injection via `Depends()` for shared logic (auth, DB sessions, config)
+- Organize routes with `APIRouter` — one router per domain area
+- Use `lifespan` context manager for startup/shutdown lifecycle, not `on_event`
+- Return appropriate HTTP status codes explicitly (`status_code=201` for creation, etc.)
+
+## MCP Servers
+
+- Use FastMCP for all MCP (Model Context Protocol) servers
+- Declare tools with `@mcp.tool()`, resources with `@mcp.resource()`
+- Use type hints and docstrings on tool functions — FastMCP derives the schema from them
+- Keep tool functions thin: validate input, delegate to domain logic, return results
+- Use `Context` for logging and progress reporting within tools
+
 ## CLI Applications
 
 - Use click for all command-line interfaces

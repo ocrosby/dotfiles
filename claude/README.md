@@ -2,6 +2,14 @@
 
 This stow package manages global Claude Code configuration files symlinked into `~/.claude/`.
 
+## Installation
+
+```bash
+cd ~/dotfiles && stow claude
+```
+
+This symlinks `claude/.claude/` into `~/.claude/`, making all rules, skills, and agents available globally.
+
 ## When to Use What
 
 ### Rules (`rules/`)
@@ -62,26 +70,26 @@ Use an output style when you want to **change how Claude responds** across an en
 
 | Rule | Scope | Description |
 |---|---|---|
-| `conventional-commits.md` | All files | Enforces Conventional Commits with Angular types (`feat`, `fix`, `docs`, etc.) |
+| `conventional-commits.md` | `**` | Enforces Conventional Commits with Angular types (`feat`, `fix`, `docs`, etc.) |
 | **Python** | | |
-| `py-conventions.md` | `**/*.py`, `pyproject.toml`, `uv.lock` | Python standards: DRY/SOLID/CLEAN, GoF patterns, DI, type hints, pytest, uv, click, hexagonal architecture, FastAPI, FastMCP |
-| `py-project-architecture.md` | `**/*.py`, `pyproject.toml` | Project structure: hexagonal layout, module responsibilities, design rules |
+| `py-conventions.md` | `**/*.py`, `**/pyproject.toml`, `**/uv.lock` | Core standards: DRY/SOLID/CLEAN, GoF patterns, DI, type hints, pytest, uv, click, hexagonal architecture, FastAPI, FastMCP |
+| `py-project-architecture.md` | `**/*.py`, `**/pyproject.toml` | Project structure: hexagonal layout, module responsibilities, design rules |
 | `py-docs.md` | `**/*.py`, `**/docs/**/*.md` | Google-style docstrings, README requirements, API documentation |
 | `py-testing.md` | `**/tests/**/*.py`, `**/test_*.py`, `**/conftest.py` | pytest conventions: structure, fixtures, FastAPI TestClient, anti-patterns |
 | **Go** | | |
-| `go-conventions.md` | `**/*.go`, `go.mod`, `go.sum` | Go standards: error handling, interfaces, naming, concurrency, idiomatic patterns |
-| `go-project-architecture.md` | `**/*.go`, `go.mod` | Project structure: cmd/internal layout, module responsibilities, design rules |
+| `go-conventions.md` | `**/*.go`, `**/go.mod`, `**/go.sum` | Core standards: error handling, interfaces, naming, concurrency, idiomatic patterns |
+| `go-project-architecture.md` | `**/*.go`, `**/go.mod` | Project structure: cmd/internal layout, module responsibilities, design rules |
 | `go-docs.md` | `**/*.go` | Godoc conventions: doc comments, README requirements, API documentation |
 | `go-testing.md` | `**/*_test.go`, `**/testdata/**` | stdlib testing: table-driven tests, fakes, httptest, anti-patterns |
 | **Gherkin** | | |
 | `gherkin-conventions.md` | `**/*.feature` | BDD standards: declarative steps, Given/When/Then, Scenario Outlines, tags, anti-patterns |
 | `gherkin-structure.md` | `**/*.feature`, `**/steps/**`, `**/step_definitions/**` | Project structure: feature file organization, step definitions, hooks, support layer |
-| `gherkin-testing.md` | `**/steps/**`, `**/step_definitions/**`, `**/features/**` | Step definition conventions: thin steps, page objects, assertions, anti-patterns |
+| `gherkin-testing.md` | `**/steps/**`, `**/step_definitions/**`, `**/features/**/*.{py,ts,rb,go}` | Step definition conventions: thin steps, page objects, assertions, anti-patterns |
 | **Neovim** | | |
 | `nvim-lua.md` | `**/*.lua` | Lua & Neovim API conventions: modern API usage, keymaps, autocommands, idiomatic Lua, error handling, performance |
 | `nvim-plugin-architecture.md` | `**/*.lua` | Plugin structure: module layout, `setup()` patterns, dependency direction, lifecycle |
 | `nvim-docs.md` | `**/doc/*.txt` | Vimdoc format: sections, tags, references, formatting rules |
-| `nvim-testing.md` | `**/tests/**/*.lua`, `**/*_spec.lua` | Plugin testing with plenary.busted: structure, buffer helpers, anti-patterns |
+| `nvim-testing.md` | `**/tests/**/*.lua`, `**/*_spec.lua`, `**/minimal_init.lua` | Plugin testing with plenary.busted: structure, buffer helpers, anti-patterns |
 
 ### Skills
 
@@ -113,18 +121,42 @@ Use an output style when you want to **change how Claude responds** across an en
 | **Python** | | | |
 | `py-architect` | opus | Read, Grep, Glob | Designs application architecture — hexagonal layout, dependency graph, API surface |
 | `py-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes bugs — tracebacks, root cause analysis |
-| `py-reviewer` | sonnet | Read, Grep, Glob | Reviews code for architecture, type safety, FastAPI patterns, idiomatic Python (plan mode) |
+| `py-reviewer` | sonnet (plan) | Read, Grep, Glob | Reviews code for architecture, type safety, FastAPI patterns, idiomatic Python |
 | **Go** | | | |
 | `go-architect` | opus | Read, Grep, Glob | Designs application architecture — cmd/internal layout, dependency graph, API surface |
 | `go-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes bugs — panics, race conditions, goroutine leaks |
-| `go-reviewer` | sonnet | Read, Grep, Glob | Reviews code for error handling, concurrency safety, idiomatic Go (plan mode) |
+| `go-reviewer` | sonnet (plan) | Read, Grep, Glob | Reviews code for error handling, concurrency safety, idiomatic Go |
 | **Gherkin** | | | |
 | `gherkin-architect` | opus | Read, Grep, Glob | Designs BDD test architecture — feature organization, step structure, tag strategy |
-| `gherkin-reviewer` | sonnet | Read, Grep, Glob | Reviews feature files for BDD best practices, declarative steps, maintainability (plan mode) |
+| `gherkin-reviewer` | sonnet (plan) | Read, Grep, Glob | Reviews feature files for BDD best practices, declarative steps, maintainability |
 | **Neovim** | | | |
 | `nvim-architect` | opus | Read, Grep, Glob | Designs plugin architecture — module layout, dependency graph, public API surface |
 | `nvim-debugger` | sonnet | Read, Grep, Glob, Bash | Diagnoses and fixes plugin bugs — root cause analysis, stack traces, state inspection |
-| `nvim-reviewer` | sonnet | Read, Grep, Glob | Reviews plugin code for correctness, deprecated APIs, performance, idiomatic patterns (plan mode) |
+| `nvim-reviewer` | sonnet (plan) | Read, Grep, Glob | Reviews plugin code for correctness, deprecated APIs, performance, idiomatic patterns |
+
+## Naming Conventions
+
+All language-specific components use a consistent prefix:
+
+| Language | Prefix | Examples |
+|---|---|---|
+| Python | `py-` | `py-conventions`, `py-feature`, `py-architect` |
+| Go | `go-` | `go-conventions`, `go-feature`, `go-architect` |
+| Gherkin | `gherkin-` | `gherkin-conventions`, `gherkin-feature`, `gherkin-architect` |
+| Neovim | `nvim-` | `nvim-lua`, `nvim-feature`, `nvim-architect` |
+
+Each language follows the same component pattern:
+
+| Component | Rules | Skills | Agents |
+|---|---|---|---|
+| Core conventions | `{prefix}-conventions` | — | — |
+| Project architecture | `{prefix}-project-architecture` | — | `{prefix}-architect` |
+| Documentation | `{prefix}-docs` | `{prefix}-docs` (nvim only) | — |
+| Testing | `{prefix}-testing` | — | — |
+| Feature development | — | `{prefix}-feature` | — |
+| Migration/modernization | — | `{prefix}-migrate` / `{prefix}-migrate-api` | — |
+| Debugging | — | `{prefix}-debug-checklist` | `{prefix}-debugger` |
+| Code review | — | — | `{prefix}-reviewer` |
 
 ## References
 

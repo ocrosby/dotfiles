@@ -10,6 +10,16 @@ cd ~/dotfiles && stow claude
 
 This symlinks `claude/.claude/` into `~/.claude/`, making all rules, skills, and agents available globally.
 
+If `~/.claude/` already has files, `stow` will refuse and report conflicts. To resolve:
+
+```bash
+# Adopt existing files into the repo (then git diff to review)
+cd ~/dotfiles && stow --adopt claude
+
+# Or remove existing files first
+rm -rf ~/.claude && cd ~/dotfiles && stow claude
+```
+
 ## When to Use What
 
 ### Rules (`rules/`)
@@ -71,6 +81,7 @@ Use an output style when you want to **change how Claude responds** across an en
 | Rule | Scope | Description |
 |---|---|---|
 | `conventional-commits.md` | `**` | Enforces Conventional Commits with Angular types (`feat`, `fix`, `docs`, etc.) |
+| `tdd.md` | All code files | Enforces red-green-refactor TDD cycle — no production code without a failing test first |
 | **Python** | | |
 | `py-conventions.md` | `**/*.py`, `**/pyproject.toml`, `**/uv.lock` | Core standards: DRY/SOLID/CLEAN, GoF patterns, DI, type hints, pytest, uv, click, hexagonal architecture, FastAPI, FastMCP |
 | `py-project-architecture.md` | `**/*.py`, `**/pyproject.toml` | Project structure: hexagonal layout, module responsibilities, design rules |

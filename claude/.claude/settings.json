@@ -1,5 +1,6 @@
 {
   "includeCoAuthoredBy": false,
+  "voiceEnabled": true,
   "permissions": {
     "allow": [
       "Bash(awk:*)",

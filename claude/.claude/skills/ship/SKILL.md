@@ -93,9 +93,17 @@ git push -u origin <branch-name>
 
 ### 7. Create the Pull Request
 
-Use `gh pr create` with a structured body:
+Use `gh pr create` with a structured body. Always assign the PR to the committer and label it based on the commit type:
 
-```
+| Commit type | Label |
+|-------------|-------|
+| `feat` | `enhancement` |
+| `fix` | `bug` |
+| `docs` | `documentation` |
+| anything else | omit `--label` |
+
+```bash
+gh pr create --assignee @me --label <label> --title "..." --body "$(cat <<'EOF'
 ## Summary
 - <bullet 1>
 - <bullet 2>
@@ -110,6 +118,8 @@ Use `gh pr create` with a structured body:
 ## Test Plan
 - [ ] <test step 1>
 - [ ] <test step 2>
+EOF
+)"
 ```
 
 PR title should follow Conventional Commits format (same type/scope as the commit).

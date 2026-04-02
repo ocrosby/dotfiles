@@ -1,6 +1,6 @@
 ---
 description: Enforces test-driven development for all code changes
-globs:
+paths:
   - "**/*.py"
   - "**/*.go"
   - "**/*.ts"

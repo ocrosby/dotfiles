@@ -29,6 +29,8 @@ func (s *UserService) CreateUser(ctx context.Context, name, email string) (*User
 - Document error conditions: which errors can be returned and when
 - Document concurrency safety: "safe for concurrent use" or "not safe for concurrent use"
 - Package comment goes in `doc.go` or the primary file of the package
+- Use named return parameters when they clarify which value is which (e.g., `(value, nextPos int)`)
+- Line comments (`//`) are the norm; block comments (`/* */`) for package-level or disabling code
 
 ## README
 

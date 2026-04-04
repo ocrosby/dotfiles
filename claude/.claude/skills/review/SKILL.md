@@ -25,7 +25,27 @@ If an argument is given, use it as the file list or pass it to `git diff --name-
 
 Group files by language.
 
-### 2. Detect the Language
+### 2. Run Linters
+
+Before delegating to reviewer agents, run the appropriate linter on each changed file. Lint failures are **Must Fix** — do not proceed to the semantic review without reporting them.
+
+| Extension | Linter command |
+|---|---|
+| `.lua` | `stylua --check <file>` (if available); `luacheck --quiet <file>` (if available) |
+| `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` |
+| `.go` | `cd $(dirname <file>) && go vet ./...` |
+| `.feature` | `gherkin-lint <file>` (if available) |
+
+Report any lint errors under a **Lint** section before the per-file review. Example:
+
+```
+## Lint Failures (Must Fix before merge)
+- lua/myplugin/init.lua — stylua: formatting differs (run `stylua lua/myplugin/init.lua`)
+```
+
+Skip linters that are not installed — do not fail the review for a missing tool.
+
+### 4. Detect the Language
 
 | Extension | Reviewer Agent |
 |---|---|
@@ -35,7 +55,7 @@ Group files by language.
 | `.feature` | `gherkin-reviewer` |
 | Other | Review inline: general quality, security (OWASP Top 10), readability |
 
-### 3. Delegate to Reviewer Agents
+### 5. Delegate to Reviewer Agents
 
 For each language group, invoke the appropriate reviewer agent. Pass it the specific files to review.
 
@@ -45,7 +65,7 @@ For non-code files (config, YAML, Markdown), review inline:
 - **Security**: injection risks, hardcoded credentials, sensitive data exposure
 - **Quality**: naming clarity, dead content, structural issues
 
-### 4. Compile the Report
+### 6. Compile the Report
 
 Aggregate agent findings into this structure for each file:
 
@@ -68,7 +88,7 @@ Aggregate agent findings into this structure for each file:
 
 If a file has no issues, write: `✓ <filename> — no issues found`
 
-### 5. Summary
+### 7. Summary
 
 After all files are reviewed, write a one-paragraph summary:
 - Overall assessment: ready to ship / needs work / significant concerns

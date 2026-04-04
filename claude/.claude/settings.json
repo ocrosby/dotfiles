@@ -112,6 +112,15 @@
             "command": "~/.claude/hooks/protect-main.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/tdd-remind.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [

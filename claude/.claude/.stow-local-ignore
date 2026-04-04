@@ -1,0 +1,4 @@
+# Exclude Claude Code's runtime project-state directory.
+# When Claude works inside ~/.claude/ it creates a nested .claude/ for
+# session/task/memory data — runtime state, not dotfiles config.
+^\.claude$

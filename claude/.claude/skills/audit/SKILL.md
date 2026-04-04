@@ -10,18 +10,24 @@ triggers:
 
 ### 1. Read Everything
 
-Read every file under `.claude/`:
+**Use two parallel batches — do not read files sequentially.**
 
-```
-agents/       — all *.md agent definitions
-hooks/        — all *.sh hook scripts
-skills/       — all */SKILL.md skill files
-commands/     — all *.md command files
-rules/        — all *.md rule files
-settings.json — permissions, hooks, plugins
-```
+**Batch 1 — discover file paths** (run these Glob calls in a single parallel message):
+- `Glob("agents/*.md")`
+- `Glob("hooks/*.sh")`
+- `Glob("skills/*/SKILL.md")`
+- `Glob("commands/*.md")`
+- `Glob("rules/*.md")`
 
-Do not skip any file. The audit is only as good as the coverage.
+**Batch 2 — read all discovered files plus settings** (issue every Read call in a single parallel message):
+- `skills/*/SKILL.md` — read with `limit: 50` (frontmatter + purpose section is sufficient; full workflow steps are not needed for structural analysis)
+- `agents/*.md` — read in full (they're short and the full content is needed)
+- `hooks/*.sh` — read in full (enforcement logic must be understood completely)
+- `rules/*.md` — read in full (they're short and the full path/content is needed)
+- `commands/*.md` — read in full
+- `settings.json` and `CLAUDE.md` — read in full
+
+Do not read files one at a time. Issue all Read calls together so they execute concurrently. If a skill's first 50 lines reveal an issue that requires deeper inspection, read that specific file in full as a follow-up. The audit is only as good as its coverage — do not skip any file.
 
 ### 2. Analyze Against Five Categories
 

@@ -1,5 +1,7 @@
 ---
 description: Generates Neovim plugin documentation in vimdoc format.
+triggers:
+  - /nvim-docs
 paths:
   - "**/*.lua"
 ---

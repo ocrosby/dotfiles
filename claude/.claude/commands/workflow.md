@@ -41,6 +41,8 @@ Checkout main, pull latest, delete merged branches.
 | Deprecated API calls | `/migrate` | Suggested by `migrate-suggest` rule when old patterns detected |
 | Structural design issues | `/refactor` | Go, Python, and Neovim supported |
 | Missing documentation | `/go-docs` / `/py-docs` / `/nvim-docs` / `/gherkin-docs` | Suggested by `docs-suggest` rule when public API added without docs |
+| Post-review code quality | `/simplify` | After `/review` to apply fixes for reuse, quality, and efficiency |
+| Go performance analysis | `/go-bench` | When benchmarking Go code or investigating allocations and throughput |
 
 ---
 
@@ -50,6 +52,24 @@ Checkout main, pull latest, delete merged branches.
 |---|---|
 | Test failure or bug | `/debug` — triage then escalates to language specialist |
 | Need deep root cause | Invoke `go-debugger`, `py-debugger`, `nvim-debugger`, or `gherkin-debugger` directly |
+
+---
+
+## Running Tests
+
+Use `/test-runner` to run the test suite and get a structured failure report without flooding the conversation with verbose output. Detects pytest, jest, vitest, and make automatically.
+
+```
+/test-runner          # run tests in the current project
+```
+
+Or run directly when you need the raw output:
+
+| Language | Command |
+|---|---|
+| Go | `go test -race ./...` |
+| Python | `pytest` |
+| Neovim/Lua | `nvim --headless -u tests/minimal_init.lua -c "PlenaryBustedDirectory tests/"` |
 
 ---
 

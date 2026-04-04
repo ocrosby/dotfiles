@@ -31,6 +31,10 @@ case "${FILE##*.}" in
       luacheck --quiet "$FILE"
     fi
     ;;
+  feature)
+    command -v gherkin-lint &>/dev/null || exit 0
+    gherkin-lint "$FILE"
+    ;;
   *)
     exit 0
     ;;

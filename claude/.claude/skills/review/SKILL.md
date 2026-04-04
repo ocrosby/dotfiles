@@ -47,12 +47,13 @@ Skip linters that are not installed — do not fail the review for a missing too
 
 ### 4. Detect the Language
 
-| Extension | Reviewer Agent |
+| Extension / Path | Reviewer Agent |
 |---|---|
 | `.go` | `go-reviewer` |
 | `.py` | `py-reviewer` |
 | `.lua` | `nvim-reviewer` |
 | `.feature` | `gherkin-reviewer` |
+| `skills/*/SKILL.md` | `skill-reviewer` |
 | Other | Review inline: general quality, security (OWASP Top 10), readability |
 
 ### 5. Delegate to Reviewer Agents

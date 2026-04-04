@@ -16,6 +16,8 @@ paths:
 - Use `vim.fn.fn(args)` — never `vim.api.nvim_call_function`
 - Use `vim.notify` with appropriate log levels for user-facing messages
 - Use `vim.ui.input` and `vim.ui.select` for async user prompts
+- Use `vim.ui.open(url_or_path)` (0.10+) to open URLs/files in the OS default handler
+- Use `vim.hl.on_yank()` (0.11+) — never `vim.highlight.on_yank()` (deprecated)
 
 ## Keymaps
 
@@ -38,8 +40,14 @@ paths:
 ## Idiomatic Lua
 
 - Iterate directly over tables, never `for i = 1, #tbl` unless index arithmetic is needed
+- Use `vim.iter()` (0.10+) for functional iteration over lists and tables — prefer it over
+  `vim.tbl_map` / `vim.tbl_filter` when chaining operations:
+
+  ```lua
+  local names = vim.iter(items):filter(function(x) return x.active end):map(function(x) return x.name end):totable()
+  ```
 - Use `vim.tbl_deep_extend("force", defaults, opts)` for merging config tables
-- Use `vim.tbl_map`, `vim.tbl_filter`, `vim.tbl_contains` where they simplify
+- Use `vim.tbl_contains` for membership checks
 - Use `vim.inspect` for debug output, never string concatenation of tables
 - Use `vim.validate` for input validation on public functions
 - Prefer local variables — no globals unless explicitly required by Neovim's loader
@@ -50,6 +58,39 @@ paths:
 - Wrap fallible external calls in `pcall` / `xpcall`
 - Check buffer and window validity before access (`nvim_buf_is_valid`, `nvim_win_is_valid`)
 - Use `vim.notify(msg, vim.log.levels.ERROR)` for user-facing errors
+
+## Async Processes (0.10+)
+
+Use `vim.system()` for subprocess calls — it is the modern replacement for
+`vim.fn.system()` / `vim.fn.jobstart()`:
+
+```lua
+-- Async (preferred)
+vim.system({ 'git', 'log', '--oneline' }, { text = true }, function(obj)
+  if obj.code == 0 then
+    vim.schedule(function() process(obj.stdout) end)
+  end
+end)
+
+-- Sync (only when result is needed immediately and blocking is acceptable)
+local obj = vim.system({ 'git', 'rev-parse', 'HEAD' }, { text = true }):wait()
+```
+
+- Always pass an argument list, never a shell string — avoids shell injection
+- Use `{ text = true }` to get stdout/stderr as strings instead of byte arrays
+- Callbacks run on a non-main thread — wrap any vim API calls in `vim.schedule()`
+
+## libuv
+
+Use `vim.uv` (0.10+, stable alias) — `vim.loop` is deprecated:
+
+```lua
+-- Good
+vim.uv.fs_stat(path, function(err, stat) ... end)
+
+-- Deprecated
+vim.loop.fs_stat(path, function(err, stat) ... end)
+```
 
 ## Performance
 

@@ -9,8 +9,9 @@ paths:
 
 ## Framework
 
-- Use plenary.busted (`require("plenary.busted")`) as the default test framework
+- Use plenary.busted (`require("plenary.busted")`) as the default test framework for plugins
 - Use mini.test when the plugin is part of the mini.nvim ecosystem or plenary is not a dependency
+- Use neotest (with `neotest-busted` adapter) when you want in-editor test execution and diagnostics
 
 ## Structure
 

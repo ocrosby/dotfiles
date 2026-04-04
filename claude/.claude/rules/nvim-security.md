@@ -7,19 +7,25 @@ paths:
 
 ## Shell Command Execution
 
-- Never pass user input or buffer content directly to `vim.fn.system()`, `io.popen()`, or `vim.fn.jobstart()` without sanitization
-- Use argument lists instead of shell strings when spawning jobs:
+- Never pass user input or buffer content directly to `vim.fn.system()`, `io.popen()`, or
+  `vim.fn.jobstart()` without sanitization
+- Use `vim.system()` (0.10+) with an argument list — it does not invoke a shell, so no
+  shell injection is possible:
 
 ```lua
 -- Bad: shell injection risk
 vim.fn.system("grep " .. user_input .. " " .. filepath)
 
--- Good: argument list, no shell interpretation
-vim.fn.jobstart({ "grep", "--", user_input, filepath }, { ... })
+-- Good: argument list via vim.system, no shell interpretation
+vim.system({ "grep", "--", user_input, filepath }, { text = true }, function(obj)
+  if obj.code == 0 then
+    vim.schedule(function() handle(obj.stdout) end)
+  end
+end)
 ```
 
 - Validate and escape any dynamic values before passing to subprocess commands
-- Prefer Neovim API operations (`:nvim_buf_get_lines`, `:nvim_exec_autocmds`) over shelling out
+- Prefer Neovim API operations (`nvim_buf_get_lines`, `nvim_exec_autocmds`) over shelling out
 
 ## Dynamic Code Execution
 

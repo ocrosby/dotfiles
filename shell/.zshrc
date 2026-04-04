@@ -1,6 +1,6 @@
 # ────────[ Functions ]────────
 twc() { cd ~/src/github/TheWeatherCompany; }
-test() { cd ~/src/github/TheWeatherCompany/qa/testing; }
+testing() { cd ~/src/github/TheWeatherCompany/qa/testing; }
 core() { cd ~/src/github/TheWeatherCompany/qa/core; }
 tools() { cd ~/src/github/TheWeatherCompany/qa/core/sun-qa-python-tools; }
 market() { cd ~/src/github/TheWeatherCompany/sun-claude-marketplace; }

@@ -1,23 +1,30 @@
 # ────────[ Functions ]────────
 twc() { cd ~/src/github/TheWeatherCompany; }
-testing() { cd ~/src/github/TheWeatherCompany/qa/testing; }
-core() { cd ~/src/github/TheWeatherCompany/qa/core; }
-tools() { cd ~/src/github/TheWeatherCompany/qa/core/sun-qa-python-tools; }
-market() { cd ~/src/github/TheWeatherCompany/sun-claude-marketplace; }
-ocrosby()  { cd ~src/github/ocrosby; }
-yodad() { cd ~/src/github/jedi-knights/yoda.nvim; }
-snvimd() { cd ~/src/github/TheWeatherCompany/sun-neovim; }
+# testing() { cd ~/src/github/TheWeatherCompany/qa/testing; }
+# core() { cd ~/src/github/TheWeatherCompany/qa/core; }
+# tools() { cd ~/src/github/TheWeatherCompany/qa/core/sun-qa-python-tools; }
+# market() { cd ~/src/github/TheWeatherCompany/sun-claude-marketplace; }
+# ocrosby()  { cd ~/src/github/ocrosby; }
+# yodad() { cd ~/src/github/jedi-knights/yoda.nvim; }
+# snvimd() { cd ~/src/github/TheWeatherCompany/sun-neovim; }
 
 # ────────[ Aliases ]────────
 alias ll="ls -la"
-alias gti="git"
+# alias gti="git"
 
 # Define common Neovim setups
 for variant in personal yoda kickstart astro chad lunar lazy; do
   alias "nvim-${variant}"="NVIM_APPNAME=\"nvim-${variant}\" nvim"
 done
+unset variant
 alias yoda='NVIM_APPNAME="nvim-yoda" nvim'
 alias snvim='NVIM_APPNAME="sun-neovim" nvim'
+
+# ────────[ Completion ]────────
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+fi
+autoload -Uz compinit && compinit -C
 
 # ────────[ Environment Variables ]────────
 export GOPATH="$HOME/go"

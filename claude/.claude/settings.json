@@ -1,6 +1,5 @@
 {
   "includeCoAuthoredBy": false,
-  "voiceEnabled": true,
   "permissions": {
     "allow": [
       "Bash(awk:*)",
@@ -99,6 +98,22 @@
     "deny": []
   },
   "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true
-  }
+    "lua-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/lint.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "voiceEnabled": true
 }

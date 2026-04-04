@@ -1,5 +1,5 @@
 ---
-description: Runs a structured code review of changed files covering quality, security, and architecture.
+description: Runs a structured code review of changed files by delegating to language-specialist reviewer agents.
 triggers:
   - /review
 ---
@@ -23,54 +23,31 @@ Use this skill when you want an explicit, structured review of changed or specif
 If no argument is given, run `git diff --name-only HEAD` to find changed files.
 If an argument is given, use it as the file list or pass it to `git diff --name-only <ref>`.
 
-Read each file in scope.
+Group files by language.
 
 ### 2. Detect the Language
 
-Route the review to the appropriate language-specific criteria based on file extension:
-
-| Extension | Criteria |
+| Extension | Reviewer Agent |
 |---|---|
-| `.go` | Go conventions, error handling, concurrency, architecture |
-| `.py` | Python conventions, type hints, domain boundaries, FastAPI patterns |
-| `.lua` | Neovim API usage, idiomatic Lua, plugin structure |
-| `.feature` | BDD best practices, declarative steps, scenario independence |
-| Other | General quality, security, readability |
+| `.go` | `go-reviewer` |
+| `.py` | `py-reviewer` |
+| `.lua` | `nvim-reviewer` |
+| `.feature` | `gherkin-reviewer` |
+| Other | Review inline: general quality, security (OWASP Top 10), readability |
 
-### 3. Review Each File
+### 3. Delegate to Reviewer Agents
 
-For each file, check the following dimensions:
+For each language group, invoke the appropriate reviewer agent. Pass it the specific files to review.
 
-#### Correctness
-- Logic errors, off-by-one, nil/None handling
-- Error paths that are silently swallowed
-- Incorrect assumptions about external state
+The agents check against their full language-specific criteria (conventions, architecture, error handling, idioms, testing) and return structured findings organized by severity.
 
-#### Security (OWASP Top 10 focus)
-- Injection: SQL, command, template, path traversal
-- Authentication/authorization gaps
-- Sensitive data in logs, error messages, or responses
-- Insecure deserialization or untrusted input passed to dangerous functions
+For non-code files (config, YAML, Markdown), review inline:
+- **Security**: injection risks, hardcoded credentials, sensitive data exposure
+- **Quality**: naming clarity, dead content, structural issues
 
-#### Architecture
-- Does the change respect layer boundaries (domain vs adapter vs infrastructure)?
-- Are dependencies going in the right direction?
-- Is new complexity justified by the problem, or is it speculative?
+### 4. Compile the Report
 
-#### Quality
-- Naming clarity — does the name communicate intent?
-- Functions doing more than one thing
-- Duplication that should be extracted (Rule of Three)
-- Dead code or commented-out code left behind
-
-#### Test Coverage
-- Are new behaviors covered by tests?
-- Are edge cases and error paths tested?
-- Are tests testing behavior, not implementation?
-
-### 4. Report
-
-Structure the report as:
+Aggregate agent findings into this structure for each file:
 
 ```
 ## Review: <filename>
@@ -93,8 +70,8 @@ If a file has no issues, write: `✓ <filename> — no issues found`
 
 ### 5. Summary
 
-After reviewing all files, write a one-paragraph summary:
-- Overall assessment (ready to ship / needs work / significant concerns)
+After all files are reviewed, write a one-paragraph summary:
+- Overall assessment: ready to ship / needs work / significant concerns
 - The most important issue if any
 - Any cross-cutting pattern across files worth noting
 

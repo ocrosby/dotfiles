@@ -112,5 +112,5 @@ Keep the dependency direction inward: adapters depend on ports, ports depend on 
 - ruff for linting and import sorting
 - black for formatting
 - mypy for static type checking where value exceeds cost
-- Functions ≤ 30 lines, cyclomatic complexity ≤ 10
+- Functions ≤ 30 lines, cyclomatic complexity ≤ 7
 - Files ≤ 300 lines; split when exceeded

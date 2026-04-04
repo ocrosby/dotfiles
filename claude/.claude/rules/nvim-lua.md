@@ -92,6 +92,11 @@ vim.uv.fs_stat(path, function(err, stat) ... end)
 vim.loop.fs_stat(path, function(err, stat) ... end)
 ```
 
+## Code Quality
+
+- Functions ≤ 40 lines, cyclomatic complexity ≤ 7
+- Files ≤ 500 lines; split into focused modules when exceeded
+
 ## Performance
 
 - Never block the main loop with synchronous I/O or network calls

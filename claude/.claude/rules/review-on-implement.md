@@ -6,19 +6,19 @@ paths:
   - "**/*.feature"
 ---
 
-# Suggest Review After Implementation
+# Always Recommend Review After Implementation
 
-After completing a significant implementation task — a new feature, bug fix, or substantial refactor — suggest running `/review` before shipping.
+After completing a significant implementation task — a new feature, bug fix, or substantial refactor — always recommend running `/review` before shipping. Do not skip this recommendation; unreviewed code is the primary source of regressions and missed issues.
 
-**When to suggest it:**
+**Always recommend `/review` when:**
 - A new function, class, module, or package has been written
 - A bug fix that touches more than one file
 - A refactor that moves or restructures code
 
-**When NOT to suggest it:**
+**Do not recommend when:**
 - Single-line fixes (typo correction, comment update, minor rename)
 - Changes to config, documentation, or non-code files only
 - The user has already run `/review` in this session for these files
 
-Keep the suggestion brief: one line at the end of your response, e.g.:
-> Consider running `/review` before shipping to catch any issues.
+Keep the recommendation brief: one line at the end of your response, e.g.:
+> Run `/review` before shipping to catch any issues.

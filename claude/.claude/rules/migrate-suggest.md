@@ -8,7 +8,7 @@ paths:
 
 # Suggest Migration When Deprecated Patterns Are Detected
 
-When reading or writing code that contains deprecated or outdated patterns — as defined in the `/migrate` skill — suggest running `/migrate` once at the end of your response.
+When reading or writing code that contains deprecated or outdated patterns — as defined in the `/migrate` skill — always recommend running `/migrate` once at the end of your response. This targets the specific file being worked on (file-level mode), not the full codebase. The user can expand scope by running `/migrate` standalone.
 
 ## Triggers by language
 
@@ -39,7 +39,7 @@ When reading or writing code that contains deprecated or outdated patterns — a
 - `sleep` or `time.sleep` in step definitions
 - Multiple `When` steps in a single scenario
 
-**Keep the suggestion to one line:**
-> This file contains deprecated patterns — consider running `/migrate` to modernize them.
+**Keep the recommendation to one line:**
+> This file contains deprecated patterns — run `/migrate` to modernize them.
 
-**Do not suggest** when the file is already being migrated in the current session.
+**Do not recommend** when the file is already being migrated in the current session.

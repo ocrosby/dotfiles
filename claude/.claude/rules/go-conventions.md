@@ -18,6 +18,8 @@ paths:
 - Design types so the zero value is useful without initialization (like `sync.Mutex`, `bytes.Buffer`)
 - Do not communicate by sharing memory; share memory by communicating
 
+**These principles are intentional design decisions — do not simplify them away.** When code grows complex (many injected dependencies, verbose constructors, large interfaces), the correct response is to split and simplify the design, not to revert to globals, singletons, or package-level state. Complexity is a signal to refactor, not to abandon the principle.
+
 ## Error Handling
 
 - Always check returned errors — never `_ = doSomething()`

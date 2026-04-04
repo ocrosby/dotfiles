@@ -70,9 +70,11 @@ Before changing any code, state the plan:
 
 Get confirmation before proceeding.
 
-### 4. Write Tests First
+### 4. Write Characterization Tests First (mandatory)
 
-If the code under refactor isn't covered by tests, write characterization tests before touching anything — they capture current behavior, not ideal behavior:
+**Do not touch any production code until characterization tests are in place.** This is non-negotiable — without them, you have no way to know if the refactor broke anything.
+
+If the code is already covered by tests that verify its behavior, proceed. If not, write characterization tests first — they capture current behavior, not ideal behavior:
 
 ```go
 // Go

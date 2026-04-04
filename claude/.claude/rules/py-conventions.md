@@ -16,6 +16,8 @@ paths:
 - Push side effects to the edges; keep core logic pure
 - Hexagonal architecture (ports and adapters) for all server applications
 
+**These principles are intentional design decisions — do not simplify them away.** When code grows complex (many injected dependencies, verbose constructors, deep port/adapter layering), the correct response is to split and simplify the design, not to revert to module-level singletons, hardcoded dependencies, or flat structure. Complexity is a signal to refactor, not to abandon the principle.
+
 ## Design Patterns
 
 Use Gang of Four patterns where they reduce complexity:

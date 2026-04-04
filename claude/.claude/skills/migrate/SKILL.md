@@ -11,9 +11,26 @@ paths:
 
 # Migrate
 
-Use this skill to modernize a codebase by replacing deprecated APIs, outdated idioms, and anti-patterns with current equivalents. This is distinct from `/refactor` (which improves design) — migration replaces specific known-bad patterns with known-good replacements.
+Use this skill to replace deprecated APIs, outdated idioms, and anti-patterns with current equivalents. This is distinct from `/refactor` (which improves design) — migration replaces specific known-bad patterns with known-good replacements. Behavior must be identical before and after.
 
-## Workflow
+## Scope
+
+`/migrate` operates in two modes depending on context:
+
+**File-level** — when invoked mid-task after spotting a deprecated pattern in a specific file:
+1. Replace the deprecated pattern(s) in that file only
+2. Verify with the appropriate test command
+3. Do not expand to the rest of the codebase unless explicitly asked
+
+**Codebase-level** — when invoked standalone to modernize an entire project:
+1. Scan the full codebase for outdated patterns (use the scan patterns below)
+2. Identify the modern replacement for each hit
+3. Replace preserving behavior exactly
+4. Verify with the appropriate test command
+
+If invoked without a specific file context, default to codebase-level. If invoked while already working on a file, default to file-level and ask before expanding scope.
+
+## Workflow (codebase-level)
 
 1. **Scan** the codebase for outdated patterns (use the scan patterns below)
 2. **Identify** the modern replacement for each hit

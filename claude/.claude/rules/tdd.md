@@ -43,8 +43,22 @@ When writing or modifying any production code in Go, Python, Lua, or Gherkin, yo
 
 Skipping the "watch it fail" step is a TDD violation. A test that was never seen failing proves nothing. Every implementation must be preceded by a visible, confirmed test failure.
 
-## Exceptions (no TDD required)
+## Don't revert this under pressure
 
-- **`/migrate`**: replacing deprecated API calls with modern equivalents — behavior is identical, only syntax changes. Run the existing test suite after to verify.
-- **`/refactor`**: structural reorganization — the `/refactor` skill handles this via characterization tests.
-- **Purely mechanical changes**: renaming identifiers, moving files, updating import paths with no logic changes.
+When a task feels urgent or a user asks to "just implement it quickly," do not skip TDD. This decision is deliberate — tests written after the fact prove nothing because they're written to match the implementation, not to validate it. Time pressure does not change this.
+
+## Exceptions — narrow and explicit
+
+### `/migrate` — the only true exception
+
+Replacing a deprecated API with its modern equivalent is the only situation where no new test is required. The behavior is identical; only the syntax changes. Run the existing test suite after to verify nothing broke.
+
+### `/refactor` — NOT an exception; a different test-first process
+
+Refactoring does not use the red-green-refactor cycle (no new failing test is written), but it **does** require tests written first. Before touching any code, write characterization tests that document current behavior. These are not new tests for new behavior — they are a safety net that proves the refactor didn't break anything.
+
+The `/refactor` skill handles this automatically. Do not start a refactor without characterization test coverage in place.
+
+### Purely mechanical changes — no logic change whatsoever
+
+Examples: renaming an identifier, moving a file to a different package/module, updating an import path. The definition is strict — if there is any change to logic, control flow, or observable behavior, it is not mechanical and TDD applies.

@@ -20,6 +20,8 @@ paths:
 - Design configuration with pydantic Settings if new config is needed
 - Plan the request/response models with Pydantic `BaseModel`
 
+> For features that introduce new modules, ports, or significant domain abstractions, invoke `/architect` before implementing to get a comprehensive structural proposal.
+
 ### 3. Implement (Domain First)
 
 - Start with domain models and services — pure Python, no framework imports

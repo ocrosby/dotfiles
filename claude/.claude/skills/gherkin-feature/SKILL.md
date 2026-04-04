@@ -15,6 +15,8 @@ paths:
 - Identify the outcomes: what is observable when it succeeds? When it fails?
 - Gather concrete examples from stakeholders — examples become scenarios
 
+> For features that span multiple domain areas or require designing the full feature suite structure, invoke `/architect` first to plan feature organization and step definition boundaries.
+
 ### 2. Write the Feature File
 
 - Start with the user story: As a / I want / So that

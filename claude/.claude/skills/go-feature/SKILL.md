@@ -20,6 +20,8 @@ paths:
 - Design interfaces at the consumer side — small, focused
 - Plan configuration via struct fields or functional options
 
+> For features that introduce new packages, significant abstractions, or cross-cutting concerns, invoke `/architect` before implementing to get a comprehensive structural proposal.
+
 ### 3. Implement (Domain First)
 
 - Start with domain types and service methods — pure logic, no I/O

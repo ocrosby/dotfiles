@@ -54,3 +54,14 @@ Every code change follows this cycle strictly:
 - Skipping the "watch it fail" step — this is what proves the test is meaningful
 
 See `testing-anti-patterns.md` in this skill directory for detailed examples and gate functions.
+
+## Language-Specific Testing Guidance
+
+The red-green-refactor cycle is universal, but tooling and patterns are language-specific. Apply the relevant rule for detailed guidance on test structure, helpers, and anti-patterns:
+
+| Language | Rule | Key tools |
+|---|---|---|
+| Go | `go-testing.md` | `testing` stdlib, `testify`, `httptest`, table-driven tests, fakes over mocks |
+| Python | `py-testing.md` | `pytest`, `pytest-mock`, `pytest-asyncio`, fixtures, fakes preferred |
+| Neovim/Lua | `nvim-testing.md` | `plenary.busted` or `mini.test`, `minimal_init.lua` for isolation |
+| Gherkin | `gherkin-testing.md` | Thin step definitions, World/context for state, Before/After for reset |

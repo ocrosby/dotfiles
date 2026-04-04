@@ -1,10 +1,11 @@
 ---
-description: Guides structural refactoring of Go or Python code — improving design, layering, and clarity without changing behavior.
+description: Guides structural refactoring of Go, Python, or Neovim code — improving design, layering, and clarity without changing behavior.
 triggers:
   - /refactor
 paths:
   - "**/*.go"
   - "**/*.py"
+  - "**/*.lua"
 ---
 
 # Refactor
@@ -48,6 +49,18 @@ Do not refactor what you do not yet understand.
 | Mutable shared state | Module-level variables mutated at runtime |
 | Fat route handler | FastAPI route does validation + business logic + persistence directly |
 
+#### Neovim/Lua smells
+
+| Smell | Symptom |
+|---|---|
+| God init.lua | Single file handles config, commands, keymaps, autocmds, and business logic |
+| Global state pollution | Module-level tables exported and mutated by callers |
+| Vimscript leakage | `vim.cmd` string commands where Lua API exists |
+| Missing idempotency | `setup()` crashes or duplicates state on second call |
+| Unchecked API calls | No `pcall` around fallible nvim API calls |
+| Hardcoded buffer numbers | `0` passed where `bufnr` should be parameterized |
+| Hot-path `require()` | Module loaded inside a frequently-called callback |
+
 ### 3. Plan the Refactor
 
 Before changing any code, state the plan:
@@ -69,6 +82,13 @@ func TestUserService_CreateUser_existingBehavior(t *testing.T) { ... }
 ```python
 # Python
 def test_create_user_existing_behavior(): ...
+```
+
+```lua
+-- Neovim (plenary)
+describe("plugin.core", function()
+  it("existing behavior: setup is idempotent", function() ... end)
+end)
 ```
 
 ### 5. Refactor in Small Steps
@@ -171,6 +191,65 @@ async def create_user(
 
 ---
 
+#### Neovim/Lua: Split a god init.lua
+
+```
+-- Before: everything in lua/plugin-name/init.lua
+-- After: split into focused modules:
+lua/plugin-name/
+  init.lua       -- setup(opts), public API surface only
+  config.lua     -- defaults + vim.tbl_deep_extend merge
+  commands.lua   -- nvim_create_user_command registrations
+  keymaps.lua    -- vim.keymap.set registrations
+  autocmds.lua   -- nvim_create_autocmd registrations
+  core.lua       -- business logic, no vim.api imports
+```
+
+Each module is required lazily from `init.lua`; `core.lua` has no Neovim API imports.
+
+#### Neovim/Lua: Fix global state
+
+```lua
+-- Before: exported mutable state
+local M = {}
+M.config = {}   -- callers can mutate this directly
+
+-- After: module-local state, exposed via accessors
+local M = {}
+local _config = {}
+
+function M.setup(opts)
+  _config = vim.tbl_deep_extend("force", defaults, opts or {})
+end
+
+function M.get_config()
+  return vim.deepcopy(_config)  -- return a copy, not the reference
+end
+```
+
+#### Neovim/Lua: Make setup() idempotent
+
+```lua
+-- Before: crashes or duplicates on second call
+function M.setup(opts)
+  vim.api.nvim_create_augroup("MyPlugin", {})  -- not cleared on re-source
+  vim.api.nvim_create_autocmd("BufEnter", { ... })
+end
+
+-- After: safe to call multiple times
+local _initialized = false
+
+function M.setup(opts)
+  _config = vim.tbl_deep_extend("force", defaults, opts or {})
+  if _initialized then return end
+  _initialized = true
+  vim.api.nvim_create_augroup("MyPlugin", { clear = true })
+  vim.api.nvim_create_autocmd("BufEnter", { group = "MyPlugin", ... })
+end
+```
+
+---
+
 ### 6. Verify
 
 **Go:**
@@ -188,6 +267,17 @@ ruff format --check .
 mypy .    # if mypy is in use
 ```
 
+**Neovim/Lua:**
+```bash
+# Run plugin test suite
+nvim --headless -u tests/minimal_init.lua \
+  -c "PlenaryBustedDirectory tests/ {minimal_init = 'tests/minimal_init.lua'}"
+
+# Check for deprecated API usage
+stylua --check lua/
+luacheck lua/    # if luacheck is configured
+```
+
 Confirm the public API is unchanged, or explicitly note what changed and why.
 
 ## Review Checklist
@@ -195,8 +285,8 @@ Confirm the public API is unchanged, or explicitly note what changed and why.
 - [ ] No behavior changes — only structural improvements
 - [ ] Tests written before refactoring to protect behavior
 - [ ] All tests pass after refactoring
-- [ ] Layer boundaries respected (domain has no external/framework imports)
-- [ ] No new global or module-level mutable state
-- [ ] Go: interfaces defined at the consumer side
-- [ ] Python: concrete dependencies replaced with Protocol interfaces
-- [ ] No circular imports
+- [ ] **Go**: layer boundaries respected, interfaces at consumer side
+- [ ] **Python**: domain has no framework/I/O imports, Protocols used
+- [ ] **Neovim**: `setup()` is idempotent, no global state exported
+- [ ] No circular imports / circular requires
+- [ ] No new mutable module-level state

@@ -20,6 +20,8 @@ paths:
 - Design configuration with sensible defaults using a `setup()` or `config` pattern
 - Plan the command and keymap surface area — keep it minimal
 
+> For features that require new modules, significant new API surface, or major structural decisions, invoke `/architect` before implementing to get a comprehensive plugin structure proposal.
+
 ### 3. Implement
 
 - Use Neovim's Lua API (`vim.api.nvim_*`) over Vimscript wherever possible

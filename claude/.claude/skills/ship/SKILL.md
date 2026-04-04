@@ -33,7 +33,7 @@ An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 - Read any relevant files needed to write an accurate commit message and PR description
 - Identify the type of change: new feature, bug fix, refactor, etc.
 
-### 2. Pre-flight: Lint Checks
+### 2. Pre-flight: Lint
 
 Before touching git, run the project's lint/format checks. Detect what's available and run all that apply:
 
@@ -49,7 +49,21 @@ Before touching git, run the project's lint/format checks. Detect what's availab
 
 **If any lint check fails: stop, report the failures, and do not proceed.** Tell the user what failed and ask them to fix it before running `/ship` again. Do not attempt to auto-fix lint errors unless the user explicitly asks.
 
-### 3. Confirm Branch Name
+### 3. Pre-flight: Tests
+
+Run the project's test suite. Detect what's available and run all that apply:
+
+| Tool | Command |
+|------|---------|
+| Go | `go test ./...` |
+| Python | `pytest` |
+| Node.js | `npm test` |
+| Lua/Neovim | `make test` or `busted` if present |
+| Makefile | `make test` if target exists |
+
+**If any tests fail: stop, report the failures, and do not proceed.** The user must fix failing tests before shipping. Do not open a PR with a broken test suite.
+
+### 4. Confirm Branch Name
 
 Derive the branch prefix from the conventional commit type of the changes:
 
@@ -63,7 +77,7 @@ Derive the branch prefix from the conventional commit type of the changes:
 - Propose a full branch name (e.g., `feature/add-user-auth`, `hotfix/fix-null-pointer`)
 - Ask for confirmation before proceeding
 
-### 4. Create the Branch from Latest Main
+### 5. Create the Branch from Latest Main
 
 Always branch from a fresh copy of the base branch to avoid merge conflicts:
 
@@ -76,7 +90,7 @@ git checkout -b <prefix>/<name>
 
 If the user has uncommitted changes, stash them first (`git stash`), create the branch, then pop (`git stash pop`).
 
-### 5. Stage and Commit
+### 6. Stage and Commit
 
 - Stage relevant files — prefer specific files over `git add -A`
 - Write a Conventional Commit message following the Angular convention:
@@ -85,13 +99,13 @@ If the user has uncommitted changes, stash them first (`git stash`), create the 
   - Body explains *why*, not *what*
 - Commit using a HEREDOC to preserve formatting
 
-### 6. Push to Remote
+### 7. Push to Remote
 
 ```bash
 git push -u origin <branch-name>
 ```
 
-### 7. Create the Pull Request
+### 8. Create the Pull Request
 
 Use `gh pr create` with a structured body. Always assign the PR to the committer and label it based on the commit type:
 
@@ -126,7 +140,7 @@ PR title should follow Conventional Commits format (same type/scope as the commi
 
 Keep the title under 70 characters.
 
-### 8. Return the PR URL
+### 9. Return the PR URL
 
 Always output the PR URL at the end so the user can open it directly.
 

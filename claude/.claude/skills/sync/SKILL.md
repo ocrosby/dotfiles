@@ -74,6 +74,17 @@ On success, report:
 - Whether changes were stashed and restored
 - The new base commit (first line of `git log origin/main -1 --oneline`)
 
+### 7. Run Tests
+
+After a clean rebase where commits were actually applied (not "already up to date"), suggest running the test suite:
+
+```bash
+go test ./...   # Go
+pytest          # Python
+```
+
+A rebase that applies without conflicts can still introduce logic-level breakage where your changes and main's changes interact incorrectly. Tests are the only way to catch this.
+
 ## Rules
 
 - Never use `git merge` — always rebase to keep a linear history

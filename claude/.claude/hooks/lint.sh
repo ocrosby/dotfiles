@@ -15,15 +15,21 @@ FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 case "${FILE##*.}" in
   py)
     command -v ruff &>/dev/null || exit 0
-    ruff check --quiet "$FILE"
+    ruff check --quiet "$FILE" && ruff format --check --quiet "$FILE"
     ;;
   go)
     command -v go &>/dev/null || exit 0
+    # go vet is fast (per-package); golangci-lint runs at ship time for full coverage
     cd "$(dirname "$FILE")" && go vet ./...
     ;;
   lua)
-    command -v stylua &>/dev/null || exit 0
-    stylua --check "$FILE"
+    # Run stylua first; also run luacheck if available
+    if command -v stylua &>/dev/null; then
+      stylua --check "$FILE" || exit 1
+    fi
+    if command -v luacheck &>/dev/null; then
+      luacheck --quiet "$FILE"
+    fi
     ;;
   *)
     exit 0

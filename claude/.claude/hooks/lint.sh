@@ -19,8 +19,16 @@ case "${FILE##*.}" in
     ;;
   go)
     command -v go &>/dev/null || exit 0
-    # go vet is fast (per-package); golangci-lint runs at ship time for full coverage
-    cd "$(dirname "$FILE")" && go vet ./...
+    # Walk up to the module root so we lint the whole module, not just one package
+    MODULE_ROOT="$(dirname "$FILE")"
+    while [[ "$MODULE_ROOT" != "/" && ! -f "$MODULE_ROOT/go.mod" ]]; do
+      MODULE_ROOT="$(dirname "$MODULE_ROOT")"
+    done
+    if command -v golangci-lint &>/dev/null; then
+      cd "$MODULE_ROOT" && golangci-lint run ./...
+    else
+      cd "$MODULE_ROOT" && go vet ./...
+    fi
     ;;
   lua)
     # Run stylua first; also run luacheck if available

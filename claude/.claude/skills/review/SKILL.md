@@ -29,21 +29,32 @@ Group files by language.
 
 Before delegating to reviewer agents, run the appropriate linter on each changed file. Lint failures are **Must Fix** — do not proceed to the semantic review without reporting them.
 
-| Extension | Linter command |
+For Go files, always resolve the module root first — do not run from the changed file's directory, as that only lints one package and misses the rest of the module:
+
+```bash
+# Find the module root (directory containing go.mod)
+MODULE_ROOT=$(cd $(dirname <file>) && go env GOMODCACHE 2>/dev/null; cd $(dirname <file>) && git rev-parse --show-toplevel)
+# More reliably:
+MODULE_ROOT=$(dirname <file>); while [ ! -f "$MODULE_ROOT/go.mod" ] && [ "$MODULE_ROOT" != "/" ]; do MODULE_ROOT=$(dirname $MODULE_ROOT); done
+```
+
+| Extension | Linter command (run from module/project root) |
 |---|---|
 | `.lua` | `stylua --check <file>` (if available); `luacheck --quiet <file>` (if available) |
 | `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` |
-| `.go` | `cd $(dirname <file>) && go vet ./... && go test -race ./...` |
+| `.go` | `cd <module-root> && golangci-lint run ./... && go test -race ./...` |
 | `.feature` | `gherkin-lint <file>` (if available) |
+
+For Go: if `golangci-lint` is not installed, fall back to `go vet ./...` — but note that `go vet` is a strict subset of golangci-lint and will miss issues that CI catches. Recommend installing golangci-lint to close the gap.
 
 Report any lint errors under a **Lint** section before the per-file review. Example:
 
 ```
 ## Lint Failures (Must Fix before merge)
-- lua/myplugin/init.lua — stylua: formatting differs (run `stylua lua/myplugin/init.lua`)
+- internal/adapters/cli/verify.go — golangci-lint: error return value not checked (errcheck)
 ```
 
-Skip linters that are not installed — do not fail the review for a missing tool.
+Do not proceed to the semantic review until lint failures are resolved.
 
 ### 4. Detect the Language
 

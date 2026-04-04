@@ -1,3 +1,13 @@
+# ────────[ Functions ]────────
+twc() { cd ~/src/github/TheWeatherCompany; }
+test() { cd ~/src/github/TheWeatherCompany/qa/testing; }
+core() { cd ~/src/github/TheWeatherCompany/qa/core; }
+tools() { cd ~/src/github/TheWeatherCompany/qa/core/sun-qa-python-tools; }
+market() { cd ~/src/github/TheWeatherCompany/sun-claude-marketplace; }
+ocrosby()  { cd ~src/github/ocrosby; }
+yodad() { cd ~/src/github/jedi-knights/yoda.nvim; }
+snvimd() { cd ~/src/github/TheWeatherCompany/sun-neovim; }
+
 # ────────[ Aliases ]────────
 alias ll="ls -la"
 alias gti="git"
@@ -7,6 +17,7 @@ for variant in personal yoda kickstart astro chad lunar lazy; do
   alias "nvim-${variant}"="NVIM_APPNAME=\"nvim-${variant}\" nvim"
 done
 alias yoda='NVIM_APPNAME="nvim-yoda" nvim'
+alias snvim='NVIM_APPNAME="sun-neovim" nvim'
 
 # ────────[ Environment Variables ]────────
 export GOPATH="$HOME/go"

@@ -1,5 +1,7 @@
 ---
 description: Guides writing new Gherkin feature files and step definitions following BDD best practices.
+triggers:
+  - /gherkin-feature
 paths:
   - "**/*.feature"
 ---

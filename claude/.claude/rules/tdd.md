@@ -3,19 +3,8 @@ description: Enforces test-driven development for all code changes
 paths:
   - "**/*.py"
   - "**/*.go"
-  - "**/*.ts"
-  - "**/*.tsx"
-  - "**/*.js"
-  - "**/*.jsx"
   - "**/*.lua"
-  - "**/*.rb"
-  - "**/*.rs"
-  - "**/*.java"
-  - "**/*.kt"
-  - "**/*.swift"
-  - "**/*.c"
-  - "**/*.cpp"
-  - "**/*.cs"
+  - "**/*.feature"
 ---
 
 # Test-Driven Development — Mandatory

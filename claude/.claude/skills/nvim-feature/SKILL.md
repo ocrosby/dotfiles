@@ -1,5 +1,7 @@
 ---
 description: Guides development of new Neovim plugin features using idiomatic Lua and the Neovim API.
+triggers:
+  - /nvim-feature
 paths:
   - "**/*.lua"
 ---

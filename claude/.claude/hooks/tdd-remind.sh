@@ -24,8 +24,14 @@ case "$FILE" in
   */tests/*|*/test/*) exit 0 ;;
 esac
 
-echo "TDD CHECK: You are about to edit a production code file (${FILE})."
-echo "Before writing implementation code, confirm:"
-echo "  1. A failing test exists that requires this change (RED step)"
-echo "  2. If not, invoke /test-driven-development and write the test first"
-echo "  3. Only skip if this is /migrate, /refactor, or a purely mechanical rename"
+echo "TDD REQUIRED: You are about to edit a production file (${FILE})."
+echo ""
+echo "STOP. Before editing this file you MUST have completed the RED step:"
+echo "  1. Written a failing test in the corresponding test file"
+echo "  2. Run the test suite and observed the test FAIL"
+echo "  3. Shown the failure output to the user"
+echo ""
+echo "If you have NOT done all three, do not proceed."
+echo "Write the failing test first, run it, confirm it fails, THEN come back."
+echo ""
+echo "Exceptions: /migrate, /refactor, or purely mechanical renames only."

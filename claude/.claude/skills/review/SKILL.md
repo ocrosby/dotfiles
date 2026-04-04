@@ -33,7 +33,7 @@ Before delegating to reviewer agents, run the appropriate linter on each changed
 |---|---|
 | `.lua` | `stylua --check <file>` (if available); `luacheck --quiet <file>` (if available) |
 | `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` |
-| `.go` | `cd $(dirname <file>) && go vet ./...` |
+| `.go` | `cd $(dirname <file>) && go vet ./... && go test -race ./...` |
 | `.feature` | `gherkin-lint <file>` (if available) |
 
 Report any lint errors under a **Lint** section before the per-file review. Example:

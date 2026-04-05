@@ -42,10 +42,14 @@ Before touching git, run the project's lint/format checks. Detect what's availab
 | ruff | `ruff check . && ruff format --check .` |
 | flake8 | `flake8 .` |
 | eslint | `npx eslint .` |
-| golangci-lint | `golangci-lint run` |
+| golangci-lint (single module) | `golangci-lint run ./...` |
+| golangci-lint (Go workspace) | If `go.work` exists: `find . -name "go.mod" -not -path "*/vendor/*" \| while read f; do (cd "$(dirname "$f")" && golangci-lint run ./...) \|\| exit 1; done` |
 | stylua | `stylua --check .` |
 | luacheck | `luacheck .` |
+| Taskfile | `task lint` if `Taskfile.yml` present — preferred over raw commands in monorepos |
 | Makefile targets | `make lint` or `make check` if present |
+
+**Go workspace detection**: Before running `golangci-lint run ./...`, check for `go.work` in the repository root. If present, the repo is a Go workspace and `./...` from the root will fail — you must iterate per-module. Prefer `task lint` if a `Taskfile.yml` is present, since it already encodes the correct per-module iteration.
 
 **If any lint check fails: stop, report the failures, and do not proceed.** Tell the user what failed and ask them to fix it before running `/ship` again. Do not attempt to auto-fix lint errors unless the user explicitly asks.
 
@@ -55,10 +59,12 @@ Run the project's test suite. Detect what's available and run all that apply:
 
 | Tool | Command |
 |------|---------|
-| Go | `go test ./...` |
+| Go (single module) | `go test ./...` |
+| Go (workspace) | If `go.work` exists: `find . -name "go.mod" -not -path "*/vendor/*" \| while read f; do (cd "$(dirname "$f")" && go test ./... -race -count=1) \|\| exit 1; done` |
 | Python | `pytest` |
 | Node.js | `npm test` |
 | Lua/Neovim | `make test` or `busted` if present |
+| Taskfile | `task test` if `Taskfile.yml` present — preferred in monorepos |
 | Makefile | `make test` if target exists |
 
 **If any tests fail: stop, report the failures, and do not proceed.** The user must fix failing tests before shipping. Do not open a PR with a broken test suite.

@@ -20,6 +20,12 @@ A learning has occurred when any of these happen:
 - A new pattern was discovered that makes rules more durable (e.g., "always" vs "suggest")
 - A specific configuration decision is made that future sessions might undo without context
 - A language-specific practice (Go, Python, Lua) is found to work better than the previous approach
+- A CI debugging loop required multiple rounds of iteration — the root cause is a candidate lesson
+- A tooling version compatibility issue was discovered (e.g., linter built with wrong Go version)
+- A build/test failure was caused by a pattern that an existing rule or hook should have caught
+- An audit (`/audit`) revealed gaps between stated behavior and actual enforcement
+
+**These are high-priority triggers.** If a session involved 3+ rounds of CI debugging to fix an issue that a rule could have prevented, that is always worth a README entry.
 
 ## What to write
 

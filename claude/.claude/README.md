@@ -81,6 +81,36 @@ The red-green-refactor cycle (new failing test → minimal implementation) does 
 
 ## Go-Specific
 
+### Go workspace repos require per-module command iteration
+
+In a Go workspace (`go.work` present), `go test ./...` and `golangci-lint run ./...` from the repository root fail with "directory prefix . does not contain modules listed in go.work". Every toolchain command must iterate over `go.mod` files using `find . -name "go.mod" | while read f; do (cd "$(dirname "$f")" && <cmd>) || exit 1; done`. If the project has a Taskfile, prefer `task lint` / `task test` — they already encode the correct pattern.
+
+---
+
+### golangci-lint major version must match the module's Go version
+
+golangci-lint is compiled with a specific Go version. If a module declares `go 1.26` but golangci-lint was built with Go 1.24 (v1.x), it fails with "file requires newer Go version go1.26 (application built with go1.24)". Use `golangci-lint v2.x` for modules declaring `go 1.26`. In GitHub Actions, `golangci-lint-action@v9` resolves to v2.x; `golangci-lint-action@v6` caps at v1.64.8 (Go 1.24) and will fail.
+
+---
+
+### golangci-lint v2 requires `version: "2"` in `.golangci.yml`
+
+golangci-lint v2 rejects v1 config files silently or with "unsupported version of the configuration". The v2 format requires `version: "2"` at the top, moves formatter config to a top-level `formatters` section, moves linter settings to `linters.settings`, and moves exclusion rules to `linters.exclusions.rules`. `gosimple` is merged into `staticcheck` in v2 — listing it separately causes an error.
+
+---
+
+### All `go.mod` files in a workspace must declare the same Go version
+
+When Go stdlib files gain build constraints (e.g., `//go:build go1.26` on FIPS files), modules that declare an older version exclude those files at compile time, causing `undefined` errors at runtime. After upgrading `go.work` to a new Go version, update every `go.mod` in the workspace to match, then run `go work sync`.
+
+---
+
+### `fail-fast: true` on matrix lint jobs cascades into false failures
+
+In a GitHub Actions matrix job for per-module linting, the default `fail-fast: true` cancels all remaining jobs when one fails. This hides failures in other modules and makes CI output misleading. Set `fail-fast: false` on lint matrix jobs so every module's result is always reported independently.
+
+---
+
 ### `go test -race` belongs in the review linter step, not just the checklist
 
 The `go-reviewer` agent checklist had "Race detector passing: `go test -race`" as an item to check, but nothing actually ran it. Adding it to the review skill's linter step (`go vet ./... && go test -race ./...`) makes it a blocking Must Fix finding rather than an advisory note.

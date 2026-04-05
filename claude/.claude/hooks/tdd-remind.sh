@@ -9,7 +9,8 @@ FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 
 [[ -z "$FILE" ]] && exit 0
 
-# Only trigger on implementation files, not test files
+# Only trigger on implementation code files — exit silently for YAML, config,
+# Markdown, shell scripts, JSON, and any other non-code file types.
 case "${FILE##*.}" in
   lua|go|py) ;;
   *) exit 0 ;;

@@ -287,7 +287,7 @@ default:
 ## Code Quality
 
 - `go vet` and `staticcheck` for linting
-- `gofumpt` for formatting
+- `gofmt` and `goimports` for formatting
 - `golangci-lint` as the meta-linter
 - Functions ≤ 40 lines, cyclomatic complexity ≤ 7
 - Files ≤ 500 lines; split when exceeded

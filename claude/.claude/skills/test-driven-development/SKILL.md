@@ -53,7 +53,9 @@ Every code change follows this cycle strictly:
 - Adding test-only methods to production classes — use test utilities instead
 - Skipping the "watch it fail" step — this is what proves the test is meaningful
 
-See `testing-anti-patterns.md` in this skill directory for detailed examples and gate functions.
+For detailed examples, anti-patterns, and gate functions, see `testing-anti-patterns.md` in this skill directory.
+
+For the full TDD mandate, exceptions, and enforcement rationale, see the `tdd.md` rule — this skill implements that rule.
 
 ## Language-Specific Testing Guidance
 

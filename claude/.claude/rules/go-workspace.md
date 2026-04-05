@@ -96,6 +96,21 @@ v2 config differences from v1:
 - Exclusion rules move to `linters.exclusions.rules`
 - `gosimple` is merged into `staticcheck` — do not list it separately
 
+## Pre-push lint hook
+
+For workspace repos, add a `.githooks/pre-push` script that runs golangci-lint across all modules before allowing a push. This catches lint failures locally that would otherwise only surface in CI.
+
+Structure:
+1. Check that golangci-lint is installed and built with the right Go version (fail with `task deps` hint if not)
+2. Run `find . -name "go.mod" | while read f; do (cd "$(dirname "$f")" && golangci-lint run ./...) || exit 1; done`
+3. Block the push if any module fails
+
+Activate with: `git config core.hooksPath .githooks`
+
+Add a `task hooks` target to the Taskfile so contributors can enable it in one command.
+
+**The fallback to `go vet` is NOT acceptable.** `go vet` misses godot, goimports, gocyclo, and every style linter. A version-mismatch golangci-lint should be a hard error with a clear fix, not a silent downgrade.
+
 ## Dependency version triangulation
 
 In workspace repos where multiple services share dependencies (e.g., `go-openapi/spec`, `swag`), version upgrades must be tested across all modules. A version that works for one service may break another:

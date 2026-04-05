@@ -105,6 +105,18 @@ When Go stdlib files gain build constraints (e.g., `//go:build go1.26` on FIPS f
 
 ---
 
+### Falling back to `go vet` on golangci-lint version mismatch creates false security
+
+When golangci-lint can't run due to a Go version mismatch, falling back to `go vet` feels safe but isn't. `go vet` only catches compilation-level issues; it misses godot (missing periods), goimports (import grouping), gocyclo (complexity), and every style linter. The result is that lint looks "clean" locally while CI fails. The correct response to a version mismatch is a **hard error** with a clear fix: `go install golangci-lint/v2/... @latest` or `task deps`. Do not silently downgrade.
+
+---
+
+### Pre-push hooks prevent CI-only lint failures
+
+A `.githooks/pre-push` script that runs `golangci-lint run ./...` per module blocks the push before it reaches CI. Without this, any lint issue — regardless of how obvious — must wait for a CI run to be discovered. Add `task hooks` to configure it in one step, and document in the README.
+
+---
+
 ### `fail-fast: true` on matrix lint jobs cascades into false failures
 
 In a GitHub Actions matrix job for per-module linting, the default `fail-fast: true` cancels all remaining jobs when one fails. This hides failures in other modules and makes CI output misleading. Set `fail-fast: false` on lint matrix jobs so every module's result is always reported independently.

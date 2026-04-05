@@ -25,19 +25,28 @@ case "${FILE##*.}" in
       MODULE_ROOT="$(dirname "$MODULE_ROOT")"
     done
     if command -v golangci-lint &>/dev/null; then
-      # Warn if local golangci-lint version may be incompatible with the module's Go version
-      LOCAL_LINT_VERSION=$(golangci-lint --version 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+' | head -1)
+      # Fail if local golangci-lint version is incompatible with the module's Go version.
+      # Do NOT fall back to go vet — it misses godot, goimports, gocyclo and other linters
+      # that CI enforces. A false-clean local lint is worse than a clear error.
+      LINT_BUILD_GO=$(golangci-lint --version 2>/dev/null | grep -oE 'built with go[0-9.]+' | grep -oE '[0-9]+\.[0-9]+([0-9.]+)?' | head -1)
       MOD_GO_VERSION=$(grep -m1 '^go ' "$MODULE_ROOT/go.mod" 2>/dev/null | awk '{print $2}')
-      # golangci-lint v1.x was built with Go <=1.24; v2.x supports Go 1.26+
-      if [[ "$MOD_GO_VERSION" == "1.26" || "$MOD_GO_VERSION" > "1.25" ]] && [[ "$LOCAL_LINT_VERSION" == "v1."* ]]; then
-        echo "WARNING: golangci-lint $LOCAL_LINT_VERSION was built with Go <=1.24 but go.mod declares go $MOD_GO_VERSION."
-        echo "Upgrade to golangci-lint v2.x: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
-        echo "Falling back to go vet..."
-        cd "$MODULE_ROOT" && go vet ./...
-      else
-        cd "$MODULE_ROOT" && golangci-lint run ./...
+      if [[ -n "$LINT_BUILD_GO" && -n "$MOD_GO_VERSION" ]]; then
+        LINT_MINOR=$(echo "$LINT_BUILD_GO" | cut -d. -f2)
+        MOD_MINOR=$(echo "$MOD_GO_VERSION" | cut -d. -f2)
+        if [[ "$LINT_MINOR" -lt "$MOD_MINOR" ]]; then
+          echo "ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}."
+          echo "golangci-lint will not run and lint issues will reach CI undetected."
+          echo ""
+          echo "Fix: reinstall golangci-lint using your current Go version:"
+          echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
+          echo "  (or: task deps  if the project has a Taskfile)"
+          exit 1
+        fi
       fi
+      cd "$MODULE_ROOT" && golangci-lint run ./...
     else
+      echo "WARNING: golangci-lint not found — install it to catch lint issues before CI:"
+      echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
       cd "$MODULE_ROOT" && go vet ./...
     fi
     ;;

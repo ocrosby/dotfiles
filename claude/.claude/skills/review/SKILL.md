@@ -56,7 +56,7 @@ Report any lint errors under a **Lint** section before the per-file review. Exam
 
 Do not proceed to the semantic review until lint failures are resolved.
 
-### 4. Detect the Language
+### 4. Detect the Language and REST API Presence
 
 | Extension / Path | Reviewer Agent |
 |---|---|
@@ -67,11 +67,20 @@ Do not proceed to the semantic review until lint failures are resolved.
 | `skills/*/SKILL.md` | `skill-reviewer` |
 | Other | Review inline: general quality, security (OWASP Top 10), readability |
 
+**Additionally**, detect whether any changed files define HTTP endpoints. A file defines HTTP endpoints if it matches any of these patterns:
+
+- Contains route registrations: `router.GET`, `router.POST`, `app.get(`, `@app.route`, `http.HandleFunc`, `mux.Handle`, `router.Handle`, `APIRouter()`, `@router.get`, `@router.post`, `r.GET`, `r.POST`, `r.PUT`, `r.PATCH`, `r.DELETE`
+- Lives under a path matching `**/routes/**`, `**/handlers/**`, `**/controllers/**`, `**/views/**`, `**/api/**`
+
+If REST API patterns are detected, invoke `rest-reviewer` on those files **in addition to** the language-specific agent.
+
 ### 5. Delegate to Reviewer Agents
 
 For each language group, invoke the appropriate reviewer agent. Pass it the specific files to review.
 
 The agents check against their full language-specific criteria (conventions, architecture, error handling, idioms, testing) and return structured findings organized by severity.
+
+If `rest-reviewer` was triggered, run it against the files containing HTTP endpoint definitions. Merge its findings into the per-file report under a `### REST API` subsection.
 
 For non-code files (config, YAML, Markdown), review inline:
 - **Security**: injection risks, hardcoded credentials, sensitive data exposure

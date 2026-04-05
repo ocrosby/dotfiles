@@ -24,12 +24,34 @@ paths:
 
 > For features that introduce new packages, significant abstractions, or cross-cutting concerns, invoke `/architect` before implementing to get a comprehensive structural proposal.
 
-### 3. Implement (Domain First)
+### 3. Implement (TDD — Domain First)
 
-- Start with domain types and service methods — pure logic, no I/O
-- Define port interfaces for any new external dependencies
-- Implement adapters: HTTP handlers, DB repositories, API clients
-- Wire dependencies in `cmd/` via constructor injection
+Follow the red-green-refactor cycle for every behavior. **No production code without a failing test first.**
+
+#### RED — Write the failing test
+
+1. Write a test in the corresponding `_test.go` file for the first behavior
+2. Run `go test ./...` and show the failure output to the user
+3. Confirm it fails for the right reason — not a syntax error or missing type
+
+#### GREEN — Make it pass
+
+1. Write only the production code needed to make the failing test pass
+2. Run `go test ./...` and show the passing output to the user
+3. Confirm all existing tests still pass
+
+#### REFACTOR — Clean up
+
+1. Remove duplication, improve naming, apply patterns — while all tests stay green
+2. Run `go test ./...` after each change
+
+#### Repeat for each behavior
+
+- Domain types and service methods first — pure logic, no I/O
+- Then port interfaces for any new external dependencies
+- Then adapters: HTTP handlers, DB repositories, API clients
+- Then wire dependencies in `cmd/` via constructor injection
+- Each new behavior gets its own red-green-refactor cycle
 
 ### 4. Structure
 

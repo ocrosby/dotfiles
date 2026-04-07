@@ -27,6 +27,17 @@ An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 
 ## Workflow
 
+### 0. Detect Active Ship Branch
+
+Before anything else, run `git branch --show-current` to check the current branch.
+
+- If the current branch is **not** `main` or `master`, an active ship session is in progress.
+  - Skip steps 4 and 5 (branch name confirmation and branch creation entirely).
+  - Proceed directly from step 3 (tests) to step 6 (stage and commit) on the existing branch.
+  - After pushing, check whether a PR already exists for this branch with `gh pr view --json url 2>/dev/null`. If one exists, output its URL — do not open a new PR.
+  - This mode persists until the user runs `/main`.
+- If the current branch **is** `main` or `master`, run the full workflow (steps 1–9).
+
 ### 1. Understand the Changes
 
 - Run `git status` and `git diff` to see what's changed
@@ -158,3 +169,4 @@ Always output the PR URL at the end so the user can open it directly.
 - If the working tree is clean, tell the user there's nothing to ship
 - If there are untracked files that seem relevant, ask whether to include them
 - Use the conventional-commits rule for all commit messages
+- Once a ship branch is active, never create a new branch — always commit to the active branch until `/main` is run

@@ -111,6 +111,7 @@ If the user has uncommitted changes, stash them first (`git stash`), create the 
 ### 6. Stage and Commit
 
 - Stage relevant files — prefer specific files over `git add -A`
+- **If `pyproject.toml` is among the staged or changed files**: run `uv lock` to regenerate the lockfile, then stage `uv.lock` alongside `pyproject.toml`. Never commit a `pyproject.toml` change without an up-to-date `uv.lock` — a stale lockfile will cause `uv sync --locked` to fail in CI.
 - Write a Conventional Commit message following the Angular convention:
   - `feat`, `fix`, `docs`, `refactor`, `chore`, etc.
   - Lowercase, imperative mood, no period, under 72 characters

@@ -33,6 +33,33 @@ paths:
 - Real library functions should avoid `panic` — if it can be worked around, return an error
 - Use `recover` only inside deferred functions to convert panics to errors at package boundaries
 
+### Typed-nil interface hazard
+
+A typed nil (`(*T)(nil)`) assigned to an interface variable produces a **non-nil interface**. Any function that accepts an `error` (or other interface) and stores it may silently preserve this hazard, causing unexpected non-nil checks and broken `Error()` output downstream.
+
+**Rule**: functions that accept an `error` parameter and store it must guard against typed nils at the point of storage — do not leave the detection to callers or documentation.
+
+```go
+// Bad — silently stores a typed nil; downstream error checks behave unexpectedly
+func Wrap(code ErrorCode, msg string, cause error) *AppError {
+    return &AppError{code: code, message: msg, err: cause}
+}
+
+// Good — normalise typed nils to untyped nil at the boundary
+func Wrap(code ErrorCode, msg string, cause error) *AppError {
+    if cause != nil && reflect.ValueOf(cause).IsNil() {
+        cause = nil
+    }
+    return &AppError{code: code, message: msg, err: cause}
+}
+```
+
+The guard applies whenever:
+- A function accepts an `error` parameter and stores it in a struct field, slice, or map
+- The function is part of a library or shared package where callers are not fully controlled
+
+A doc comment saying "don't pass a typed nil" is **not** a substitute for the guard — documentation is ignored; runtime guards are not.
+
 ## Interfaces
 
 - Keep interfaces small — one or two methods

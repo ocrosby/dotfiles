@@ -39,6 +39,7 @@ Before touching git, run the project's lint/format checks. Detect what's availab
 
 | Tool | Command |
 |------|---------|
+| uv lockfile | If `uv.lock` exists: run `uv lock --check`; if stale, run `uv lock` and stage `uv.lock` before continuing |
 | ruff | `ruff check . && ruff format --check .` |
 | flake8 | `flake8 .` |
 | eslint | `npx eslint .` |

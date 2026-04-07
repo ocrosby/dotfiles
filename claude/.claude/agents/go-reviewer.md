@@ -25,6 +25,7 @@ You are a senior Go code reviewer. Your reviews are thorough but focused — fla
 - [ ] Sentinel errors used for expected conditions (`ErrNotFound`, etc.)
 - [ ] No panics in library code — panics only in `main` for unrecoverable startup failures
 - [ ] Errors from `Close()` checked where data loss is possible (file writes, DB transactions)
+- [ ] **Typed-nil interface guard**: any function that accepts an `error` (or other interface) parameter and stores it must guard against typed nils using `reflect.ValueOf(cause).IsNil()`. A doc comment warning callers not to pass a typed nil is **not** sufficient — flag absence of the guard as **Critical** and prescribe the `reflect` fix. See `go-conventions.md` § Typed-nil interface hazard for the canonical pattern.
 
 ### Architecture
 

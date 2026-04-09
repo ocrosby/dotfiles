@@ -2,9 +2,14 @@
 description: Enforces professional structure and up-to-date workflow badges in root README.md files
 paths:
   - "README.md"
+  - "./README.md"
 ---
 
 # README Standard — Root README.md
+
+**This rule applies only to the `README.md` at the repository root. Do not apply it to README files in subdirectories.**
+
+If the file being edited is not at the root of the repository (i.e., its path contains a directory component such as `src/foo/README.md`), ignore this rule entirely.
 
 **Every root `README.md` must conform to this standard. Do not ship a README that violates it.**
 

@@ -1,5 +1,10 @@
 ---
 description: Enforces test-driven development when writing, modifying, or fixing code. Auto-invoked for implementation tasks.
+paths:
+  - "**/*.py"
+  - "**/*.go"
+  - "**/*.lua"
+  - "**/*.feature"
 ---
 
 # Test-Driven Development

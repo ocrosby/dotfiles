@@ -6,7 +6,7 @@
 set -uo pipefail
 
 INPUT=$(cat)
-FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
 
 # Exit silently if no file path or file doesn't exist
 [[ -z "$FILE" ]] && exit 0
@@ -24,6 +24,8 @@ case "${FILE##*.}" in
     while [[ "$MODULE_ROOT" != "/" && ! -f "$MODULE_ROOT/go.mod" ]]; do
       MODULE_ROOT="$(dirname "$MODULE_ROOT")"
     done
+    # No go.mod found anywhere in the tree — skip linting
+    [[ ! -f "$MODULE_ROOT/go.mod" ]] && exit 0
     if command -v golangci-lint &>/dev/null; then
       # Fail if local golangci-lint version is incompatible with the module's Go version.
       # Do NOT fall back to go vet — it misses godot, goimports, gocyclo and other linters

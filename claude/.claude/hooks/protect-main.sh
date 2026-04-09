@@ -12,7 +12,7 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 if [[ "$COMMAND" == *"git commit"* ]]; then
   BRANCH=$(cd "${CLAUDE_PROJECT_DIR:-.}" && git branch --show-current 2>/dev/null)
   if [[ "$BRANCH" == "main" || "$BRANCH" == "master" ]]; then
-    echo "ERROR: Direct commit to '$BRANCH' is not allowed."
+    echo "[hook: protect-main] ERROR: Direct commit to '$BRANCH' is not allowed."
     echo ""
     echo "  Create a feature branch first, or use /ship which handles branching automatically."
     echo "    git checkout -b feature/<name>"
@@ -23,7 +23,7 @@ fi
 # Check for force-push to main/master
 if [[ "$COMMAND" == *"git push"* ]] && ([[ "$COMMAND" == *"--force"* ]] || [[ "$COMMAND" == *" -f "* ]] || [[ "$COMMAND" == *" -f" ]]); then
   if [[ "$COMMAND" == *"main"* || "$COMMAND" == *"master"* ]]; then
-    echo "ERROR: Force-push to a protected branch is not allowed."
+    echo "[hook: protect-main] ERROR: Force-push to a protected branch is not allowed."
     echo ""
     echo "  Force-pushing to main/master can overwrite history and break other contributors."
     echo "  If you need to update the remote, use: git push --force-with-lease"

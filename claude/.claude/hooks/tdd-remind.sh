@@ -25,7 +25,7 @@ case "$FILE" in
   */tests/*|*/test/*) exit 0 ;;
 esac
 
-echo "TDD REQUIRED: You are about to edit a production file (${FILE})."
+echo "[hook: tdd-remind] TDD REQUIRED: You are about to edit a production file (${FILE})."
 echo ""
 echo "STOP. Before editing this file you MUST have completed the RED step:"
 echo "  1. Written a failing test in the corresponding test file"

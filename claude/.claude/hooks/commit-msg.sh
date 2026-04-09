@@ -21,7 +21,7 @@ SUBJECT=$(cd "${CLAUDE_PROJECT_DIR:-.}" && git log -1 --pretty=%s 2>/dev/null)
 PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9/_-]+\))?(!)?: .+'
 
 if ! echo "$SUBJECT" | grep -qE "$PATTERN"; then
-  echo "WARNING: Commit message does not follow Conventional Commits format."
+  echo "[hook: commit-msg] WARNING: Commit message does not follow Conventional Commits format."
   echo ""
   echo "  Got:      $SUBJECT"
   echo "  Expected: <type>(<scope>): <description>"
@@ -34,7 +34,7 @@ fi
 
 # Check subject line length
 if [[ ${#SUBJECT} -gt 72 ]]; then
-  echo "WARNING: Commit subject is ${#SUBJECT} chars (max 72)."
+  echo "[hook: commit-msg] WARNING: Commit subject is ${#SUBJECT} chars (max 72)."
   echo "  $SUBJECT"
   echo ""
   echo "  Shorten the subject and move details to the commit body."

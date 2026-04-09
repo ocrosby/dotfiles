@@ -12,9 +12,12 @@ FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null
 [[ -z "$FILE" ]] && exit 0
 [[ ! -f "$FILE" ]] && exit 0
 
+HOOK="[hook: lint]"
+
 case "${FILE##*.}" in
   py)
     command -v ruff &>/dev/null || exit 0
+    echo "$HOOK ruff: checking $FILE"
     ruff check --quiet "$FILE" && ruff format --check --quiet "$FILE"
     ;;
   go)
@@ -36,7 +39,7 @@ case "${FILE##*.}" in
         LINT_MINOR=$(echo "$LINT_BUILD_GO" | cut -d. -f2)
         MOD_MINOR=$(echo "$MOD_GO_VERSION" | cut -d. -f2)
         if [[ "$LINT_MINOR" -lt "$MOD_MINOR" ]]; then
-          echo "ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}."
+          echo "$HOOK ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}."
           echo "golangci-lint will not run and lint issues will reach CI undetected."
           echo ""
           echo "Fix: reinstall golangci-lint using your current Go version:"
@@ -45,9 +48,10 @@ case "${FILE##*.}" in
           exit 1
         fi
       fi
+      echo "$HOOK golangci-lint: checking $MODULE_ROOT"
       cd "$MODULE_ROOT" && golangci-lint run ./...
     else
-      echo "WARNING: golangci-lint not found — install it to catch lint issues before CI:"
+      echo "$HOOK WARNING: golangci-lint not found — install it to catch lint issues before CI:"
       echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
       cd "$MODULE_ROOT" && go vet ./...
     fi
@@ -55,14 +59,17 @@ case "${FILE##*.}" in
   lua)
     # Run stylua first; also run luacheck if available
     if command -v stylua &>/dev/null; then
+      echo "$HOOK stylua: checking $FILE"
       stylua --check "$FILE" || exit 1
     fi
     if command -v luacheck &>/dev/null; then
+      echo "$HOOK luacheck: checking $FILE"
       luacheck --quiet "$FILE"
     fi
     ;;
   feature)
     command -v gherkin-lint &>/dev/null || exit 0
+    echo "$HOOK gherkin-lint: checking $FILE"
     gherkin-lint "$FILE"
     ;;
   yml|yaml)
@@ -70,11 +77,13 @@ case "${FILE##*.}" in
     case "$FILE" in
       */.github/workflows/*)
         if command -v actionlint &>/dev/null; then
+          echo "$HOOK actionlint: checking $FILE"
           actionlint "$FILE"
         fi
         ;;
       *)
         if command -v yamllint &>/dev/null; then
+          echo "$HOOK yamllint: checking $FILE"
           yamllint -d '{extends: relaxed, rules: {line-length: {max: 120}}}' "$FILE"
         fi
         ;;

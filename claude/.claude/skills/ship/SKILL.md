@@ -31,12 +31,46 @@ An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 
 Before anything else, run `git branch --show-current` to check the current branch.
 
-- If the current branch is **not** `main` or `master`, an active ship session is in progress.
-  - Skip steps 4 and 5 (branch name confirmation and branch creation entirely).
-  - Proceed directly from step 3 (tests) to step 6 (stage and commit) on the existing branch.
-  - After pushing, check whether a PR already exists for this branch with `gh pr view --json url 2>/dev/null`. If one exists, output its URL — do not open a new PR.
-  - This mode persists until the user runs `/main`.
 - If the current branch **is** `main` or `master`, run the full workflow (steps 1–9).
+- If the current branch is **not** `main` or `master`, determine the state of the remote branch before proceeding:
+
+#### Remote branch state check
+
+```bash
+git fetch origin
+```
+
+Then check whether the remote branch exists and whether it has been merged:
+
+```bash
+# Does the remote branch exist?
+git ls-remote --exit-code origin <current-branch>
+
+# Has it been merged into the base branch (main/master)?
+git branch -r --merged origin/main | grep "origin/<current-branch>"
+```
+
+**Case A — Remote branch exists and has NOT been merged:**
+
+The branch is still active. Skip steps 4 and 5.
+Proceed directly from step 3 (tests) to step 6 (stage and commit) on the existing branch.
+After pushing, check whether a PR already exists with `gh pr view --json url 2>/dev/null`.
+If one exists, output its URL — do not open a new PR.
+
+**Case B — Remote branch has already been merged (or no longer exists on remote):**
+
+The previous branch's work is already in main. The local branch is stale.
+Do not commit to it. Instead:
+1. Stash any uncommitted changes: `git stash`
+2. Checkout and update main: `git checkout main && git pull origin main`
+3. Pop the stash: `git stash pop`
+4. Inform the user: "Branch `<name>` was already merged — starting fresh from main."
+5. Run the full workflow (steps 1–9) to create a new branch.
+
+**Case C — Remote branch does not exist yet (first push on a new local branch):**
+
+Treat as an active ship session same as Case A — skip steps 4 and 5, commit and push.
+After pushing (`git push -u origin <branch>`), run `gh pr create` to open a new PR.
 
 ### 1. Understand the Changes
 
@@ -169,4 +203,5 @@ Always output the PR URL at the end so the user can open it directly.
 - If the working tree is clean, tell the user there's nothing to ship
 - If there are untracked files that seem relevant, ask whether to include them
 - Use the conventional-commits rule for all commit messages
-- Once a ship branch is active, never create a new branch — always commit to the active branch until `/main` is run
+- If the current branch is active and unmerged, always commit to it — never create a new branch
+- If the current branch has already been merged into main, check out main and start a fresh branch — never commit to a merged branch

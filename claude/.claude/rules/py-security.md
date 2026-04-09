@@ -2,7 +2,6 @@
 paths:
   - "**/*.py"
   - "**/pyproject.toml"
-  - "**/.env*"
 ---
 
 # Python Security

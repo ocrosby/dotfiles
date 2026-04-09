@@ -4,11 +4,6 @@ paths:
   - "**/*.py"
   - "**/*.ts"
   - "**/*.js"
-  - "**/routes/**"
-  - "**/handlers/**"
-  - "**/controllers/**"
-  - "**/views/**"
-  - "**/api/**"
 ---
 
 # REST API Conventions

@@ -3,9 +3,6 @@ description: Go workspace conventions for monorepos using go.work — CI pattern
 paths:
   - "go.work"
   - "**/go.mod"
-  - ".github/workflows/*.yml"
-  - "Taskfile.yml"
-  - "Makefile"
 ---
 
 # Go Workspace Conventions

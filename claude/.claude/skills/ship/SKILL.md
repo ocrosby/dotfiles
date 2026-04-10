@@ -84,7 +84,7 @@ Before touching git, run the project's lint/format checks. Detect what's availab
 
 | Tool | Command |
 |------|---------|
-| uv lockfile | If `uv.lock` exists: always run `uv lock` to sync it, then stage `uv.lock` before continuing |
+| uv lockfile | If `uv.lock` exists: run `uv lock` to sync it, then **always** run `git add uv.lock` — even if `uv lock` produced no new changes, because the file may already carry an unstaged modification from a prior sync that must be included in the commit |
 | ruff | `ruff check . && ruff format --check .` |
 | flake8 | `flake8 .` |
 | eslint | `npx eslint .` |

@@ -12,8 +12,10 @@ Use this skill when the user wants to switch to the main branch and sync it with
 
 1. Run `git checkout main`
 2. Run `git pull origin main`
-3. Delete merged local branches: `git branch --merged main | grep -v '^\*\|main\|master' | xargs -r git branch -d`
-4. Report the result — current branch, the pull output (fast-forward, already up to date, etc.), and any branches that were deleted
+3. If `uv.lock` exists: run `uv lock` to re-sync the lockfile with any version bump
+   that the release workflow may have committed to main. Report if `uv.lock` changed.
+4. Delete merged local branches: `git branch --merged main | grep -v '^\*\|main\|master' | xargs -r git branch -d`
+5. Report the result — current branch, the pull output (fast-forward, already up to date, etc.), and any branches that were deleted
 
 ## Rules
 
@@ -21,3 +23,4 @@ Use this skill when the user wants to switch to the main branch and sync it with
 - If `main` does not exist but `master` does, use `master` instead
 - Always report the final state: current branch and whether the pull brought in new commits
 - If no merged branches were found to delete, omit that from the report (don't mention it)
+- After `uv lock`, leave `uv.lock` as an unstaged change — do not commit it automatically

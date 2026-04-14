@@ -86,7 +86,11 @@ Keep the dependency direction inward: adapters depend on ports, ports depend on 
 
 - Use uv as the package manager everywhere
 - `uv init`, `uv add`, `uv run`, `uv sync` — never pip directly
-- Always run `uv lock` after any dependency change to keep `uv.lock` in sync — an out-of-sync lockfile breaks remote builds
+- After any change to `pyproject.toml` (dependencies, version, metadata), run `uv lock` immediately. Do not skip this step — an out-of-sync `uv.lock` does not fail the current CI run; it fails the *next* one, making the cause invisible.
+
+**This is non-negotiable — do not defer it.** The failure is always delayed by one merge, which makes it look like the next PR broke CI when it didn't.
+
+In semantic-release `build_command`, `uv lock` must run *before* any `uv run` step. If `uv run` is called first against a freshly bumped `pyproject.toml`, it may fail on the stale lockfile and — due to `&&` short-circuit — `uv lock` never runs. The stale lockfile gets committed and breaks `uv sync --locked` on the next CI trigger.
 
 ## Idiomatic Python
 

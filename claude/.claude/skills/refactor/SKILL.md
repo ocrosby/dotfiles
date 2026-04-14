@@ -101,103 +101,35 @@ Apply one change at a time, running tests after each step.
 
 #### Go: Extract a package
 
-```bash
-# Move related types/functions into a new package, then:
-go test ./...    # verify no regressions
-go vet ./...     # verify no import cycles
-```
+Move related types/functions into a new package, then run `go test ./... && go vet ./...` to verify no regressions and no import cycles.
 
 #### Go: Narrow an interface
 
-```go
-// Before: wide interface used differently by different consumers
-type Store interface {
-    CreateUser(...) error
-    GetUser(...) (*User, error)
-    DeleteUser(...) error
-    CreateSession(...) error   // unrelated to user concerns
-    DeleteSession(...) error
-}
-
-// After: split by consumer
-type UserStore interface {
-    CreateUser(...) error
-    GetUser(...) (*User, error)
-    DeleteUser(...) error
-}
-
-type SessionStore interface {
-    CreateSession(...) error
-    DeleteSession(...) error
-}
-```
+Split wide interfaces by consumer — each interface exposes only the methods that specific consumer needs (e.g., `UserStore`, `SessionStore` instead of one `Store` with 5+ methods).
 
 #### Go: Fix a layering violation
 
-- Move business logic from adapters into the domain service
-- Replace concrete type references with interface references
-- Inject the dependency via the constructor
+Move business logic from adapters into the domain service. Replace concrete type references with interfaces. Inject dependencies via constructors.
 
 ---
 
 #### Python: Extract a module
 
-```bash
-# Move coherent cluster of functions/classes to a new module, then:
-python -c "import mypackage"    # verify no circular imports
-pytest                           # verify no regressions
-```
+Move a coherent cluster of functions/classes into a new module, then run `python -c "import mypackage"` to verify no circular imports, followed by `pytest`.
 
 #### Python: Replace concrete dependency with Protocol
 
-```python
-# Before
-class UserService:
-    def __init__(self):
-        self.repo = PostgresUserRepository()  # hard dependency
-
-# After
-from typing import Protocol
-
-class UserRepository(Protocol):
-    def save(self, user: User) -> None: ...
-    def find_by_email(self, email: str) -> User | None: ...
-
-class UserService:
-    def __init__(self, repo: UserRepository) -> None:
-        self.repo = repo
-```
+Define a `Protocol` interface for the dependency, update `__init__` to accept the Protocol type, and delete the direct instantiation. The concrete implementation satisfies the Protocol without inheriting from it.
 
 #### Python: Fix a fat route handler
 
-```python
-# Before: business logic in the route
-@router.post("/users")
-async def create_user(body: CreateUserRequest, db: Session = Depends(get_db)):
-    existing = db.query(User).filter_by(email=body.email).first()
-    if existing:
-        raise HTTPException(409, "email taken")
-    user = User(name=body.name, email=body.email)
-    db.add(user)
-    db.commit()
-    return user
-
-# After: delegate to domain service
-@router.post("/users", status_code=201)
-async def create_user(
-    body: CreateUserRequest,
-    service: UserService = Depends(get_user_service),
-):
-    return service.create_user(name=body.name, email=body.email)
-```
+Route handlers must only parse the request and delegate to a domain service. Move validation, business logic, and persistence into the service layer. The handler's body should be ≤5 lines.
 
 ---
 
 #### Neovim/Lua: Split a god init.lua
 
 ```
--- Before: everything in lua/plugin-name/init.lua
--- After: split into focused modules:
 lua/plugin-name/
   init.lua       -- setup(opts), public API surface only
   config.lua     -- defaults + vim.tbl_deep_extend merge
@@ -211,44 +143,11 @@ Each module is required lazily from `init.lua`; `core.lua` has no Neovim API imp
 
 #### Neovim/Lua: Fix global state
 
-```lua
--- Before: exported mutable state
-local M = {}
-M.config = {}   -- callers can mutate this directly
-
--- After: module-local state, exposed via accessors
-local M = {}
-local _config = {}
-
-function M.setup(opts)
-  _config = vim.tbl_deep_extend("force", defaults, opts or {})
-end
-
-function M.get_config()
-  return vim.deepcopy(_config)  -- return a copy, not the reference
-end
-```
+Use module-local state (`local _config = {}`). Expose read access via an accessor that returns `vim.deepcopy(_config)` — never export the table reference directly.
 
 #### Neovim/Lua: Make setup() idempotent
 
-```lua
--- Before: crashes or duplicates on second call
-function M.setup(opts)
-  vim.api.nvim_create_augroup("MyPlugin", {})  -- not cleared on re-source
-  vim.api.nvim_create_autocmd("BufEnter", { ... })
-end
-
--- After: safe to call multiple times
-local _initialized = false
-
-function M.setup(opts)
-  _config = vim.tbl_deep_extend("force", defaults, opts or {})
-  if _initialized then return end
-  _initialized = true
-  vim.api.nvim_create_augroup("MyPlugin", { clear = true })
-  vim.api.nvim_create_autocmd("BufEnter", { group = "MyPlugin", ... })
-end
-```
+Guard with a `local _initialized = false` flag. Pass `{ clear = true }` to `nvim_create_augroup` so re-sourcing doesn't duplicate autocmds.
 
 ---
 

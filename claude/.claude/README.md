@@ -135,11 +135,38 @@ Running `go test -bench=./...` on every review is too slow and only measures wha
 
 ---
 
+## Python-Specific
+
+### semantic-release build_command: run `uv lock` before `uv run`
+
+semantic-release bumps `pyproject.toml` first, then runs `build_command`. If `build_command` starts with `uv run ... && uv lock`, the `uv run` may fail against the stale lockfile and — due to `&&` short-circuit — `uv lock` never executes. The stale lockfile is committed alongside the version bump and breaks `uv sync --locked` on the *next* CI trigger, one merge later. Always order it `uv lock && uv run ...`.
+
+---
+
 ## Complexity
 
 ### Cyclomatic complexity limit should be ≤ 7 globally
 
 A limit of 10 is too permissive — functions with complexity 8–10 are measurably harder to test and reason about. The limit of 7 applies to Go, Python, and Lua. Gherkin is declarative and does not have cyclomatic complexity.
+
+---
+
+## Setup & Configuration
+
+### LSP plugins should be configured per-project, not globally
+
+Enabling `gopls-lsp`, `pyright-lsp`, and `lua-lsp` in the global `~/.claude/settings.json` starts all three language servers on every session regardless of the project type. Move them to a per-project `.claude/settings.json` at the repo root, enabling only the languages that project uses.
+
+**Template for a Go project:**
+```json
+{
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  }
+}
+```
+
+**Available plugins:** `gopls-lsp@claude-plugins-official`, `pyright-lsp@claude-plugins-official`, `lua-lsp@claude-plugins-official`
 
 ---
 

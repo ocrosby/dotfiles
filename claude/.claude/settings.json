@@ -97,15 +97,19 @@
     ],
     "deny": []
   },
-  "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
-  },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash(git commit:*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/protect-main.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git push:*)",
         "hooks": [
           {
             "type": "command",
@@ -134,7 +138,7 @@
         ]
       },
       {
-        "matcher": "Bash",
+        "matcher": "Bash(git commit:*)",
         "hooks": [
           {
             "type": "command",

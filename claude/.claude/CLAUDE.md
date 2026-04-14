@@ -11,3 +11,8 @@ Apply this principle consistently in every session:
 - **Treat context as first-class information**: Business rules, architectural constraints, prior decisions, and team conventions are as important as the code itself. Surface and preserve this reasoning rather than optimizing it away.
 
 Code that loses its reasoning becomes legacy code. Every interaction should add clarity about *why*, not just *what*.
+
+# Commit Messages
+
+Always use Conventional Commits: `<type>(<scope>): <description>` — lowercase, imperative mood, no period.
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`. Breaking changes use `!` and a `BREAKING CHANGE:` footer.

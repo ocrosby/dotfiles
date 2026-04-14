@@ -48,8 +48,12 @@ case "${FILE##*.}" in
           exit 1
         fi
       fi
-      echo "$HOOK golangci-lint: checking $MODULE_ROOT"
-      cd "$MODULE_ROOT" && golangci-lint run ./...
+      # Lint only the package containing the changed file, not the whole module.
+      # Faster per-edit; run golangci-lint ./... manually for a full module check.
+      PKG_DIR="$(dirname "$FILE")"
+      REL_PKG="${PKG_DIR#${MODULE_ROOT}/}"
+      echo "$HOOK golangci-lint: checking ./$REL_PKG"
+      cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG"
     else
       echo "$HOOK WARNING: golangci-lint not found — install it to catch lint issues before CI:"
       echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
@@ -71,6 +75,18 @@ case "${FILE##*.}" in
     command -v gherkin-lint &>/dev/null || exit 0
     echo "$HOOK gherkin-lint: checking $FILE"
     gherkin-lint "$FILE"
+    ;;
+  toml)
+    if [[ "$(basename "$FILE")" == "pyproject.toml" ]]; then
+      command -v uv &>/dev/null || exit 0
+      PROJ_DIR="$(dirname "$FILE")"
+      [[ -f "$PROJ_DIR/uv.lock" ]] || exit 0
+      echo "$HOOK uv lock --check: verifying lockfile is in sync with pyproject.toml"
+      if ! (cd "$PROJ_DIR" && uv lock --check 2>&1); then
+        echo "$HOOK ERROR: uv.lock is out of sync. Run: uv lock"
+        exit 1
+      fi
+    fi
     ;;
   yml|yaml)
     # Use actionlint for GitHub Actions workflows; yamllint for other YAML files

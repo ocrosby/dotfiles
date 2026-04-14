@@ -9,6 +9,7 @@ twc() { cd ~/src/github/TheWeatherCompany; }
 # snvimd() { cd ~/src/github/TheWeatherCompany/sun-neovim; }
 
 # ────────[ Aliases ]────────
+eval "$(zoxide init zsh)"
 alias ll="ls -la"
 # alias gti="git"
 

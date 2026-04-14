@@ -25,14 +25,4 @@ case "$FILE" in
   */tests/*|*/test/*) exit 0 ;;
 esac
 
-echo "[hook: tdd-remind] TDD REQUIRED: You are about to edit a production file (${FILE})."
-echo ""
-echo "STOP. Before editing this file you MUST have completed the RED step:"
-echo "  1. Written a failing test in the corresponding test file"
-echo "  2. Run the test suite and observed the test FAIL"
-echo "  3. Shown the failure output to the user"
-echo ""
-echo "If you have NOT done all three, do not proceed."
-echo "Write the failing test first, run it, confirm it fails, THEN come back."
-echo ""
-echo "Exceptions: /migrate, /refactor, or purely mechanical renames only."
+echo "[hook: tdd-remind] TDD REQUIRED: Write a failing test, run it, show failure output — THEN edit ${FILE}. Exceptions: /migrate, /refactor, or purely mechanical renames only."

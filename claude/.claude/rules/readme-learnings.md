@@ -1,5 +1,8 @@
 ---
 description: Automatically documents new Claude configuration learnings in README.md and pushes to main
+paths:
+  - ".claude/**"
+  - "README.md"
 ---
 
 # Document Claude Learnings in README.md

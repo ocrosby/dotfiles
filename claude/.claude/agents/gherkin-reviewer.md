@@ -41,6 +41,8 @@ You are a senior BDD reviewer. Your reviews are thorough but focused — flag re
 - [ ] Examples tables have meaningful variation — not trivially different
 - [ ] No incidental details — only data that affects the outcome is included
 - [ ] Parameters in quotes for strings, bare for numbers
+- [ ] Examples table column headers match the `<placeholder>` names used in the scenario steps — a header named `path` must align with `<path>` in the resource/querystring, not `<lat>` or `<format>`
+- [ ] Examples table columns are vertically aligned: every cell in a column is padded to the same width (header included). The header `| path |` is misaligned when data rows show `| achePain  |` — fix by padding the header to `| path      |`
 
 ### Step definitions
 

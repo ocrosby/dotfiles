@@ -115,6 +115,71 @@ In semantic-release `build_command`, `uv lock` must run *before* any `uv run` st
 
 - ruff for linting and import sorting
 - black for formatting
-- mypy for static type checking where value exceeds cost
+- basedpyright for static type checking
 - Functions ≤ 30 lines, cyclomatic complexity ≤ 7
 - Files ≤ 300 lines; split when exceeded
+
+## basedpyright
+
+basedpyright is the project-wide static type checker. Run it with `uv run basedpyright`.
+
+### Import path discipline
+
+basedpyright enforces strict re-export tracking. Libraries without a `py.typed` marker do
+not re-export their symbols in a way basedpyright recognises. Import directly from the
+concrete submodule rather than the package top-level:
+
+```python
+# Wrong — "Collection is not exported from module 'invoke'"
+from invoke import Collection, task
+
+# Right
+from invoke.collection import Collection
+from invoke.context import Context
+from invoke.tasks import task  # pyright: ignore[reportUnknownVariableType]
+```
+
+Apply this pattern whenever basedpyright reports `"X is not exported from module Y"`.
+
+### Untyped decorators
+
+Decorators from libraries without stubs trigger `reportUntypedFunctionDecorator`. Suppress
+per-decorator — never disable the rule globally:
+
+```python
+@task  # pyright: ignore[reportUntypedFunctionDecorator]
+def my_task(ctx: Context) -> None: ...
+```
+
+### Unused call results (`reportUnusedCallResult`)
+
+basedpyright flags non-None return values that are silently discarded. Assign to `_` to
+signal intentional discard:
+
+```python
+# Flagged: xadd returns bytes|None, xack returns int,
+#          add_insecure_port returns int, cancel() returns bool
+_ = await client.xadd(stream, fields)
+_ = await client.xack(stream, group, message_id)
+_ = server.add_insecure_port("[::]:50051")
+_ = task.cancel()
+_ = await asyncio.gather(t1, t2, return_exceptions=True)
+```
+
+Common call sites that produce this warning: redis-py stream operations, grpc
+`add_insecure_port`, `asyncio.Task.cancel`, and `asyncio.gather` with
+`return_exceptions=True`.
+
+### `str | bytes` narrowing from external APIs
+
+gRPC and other low-level libraries type metadata values as `str | bytes`. Narrow to `str`
+explicitly before assigning to a `str`-typed field:
+
+```python
+def _to_str(v: str | bytes) -> str:
+    return v.decode() if isinstance(v, bytes) else v
+
+user_id = _to_str(metadata.get("x-user-id"))
+```
+
+Do **not** use `str(v)` — for bytes, `str(b"foo")` produces `"b'foo'"`, not `"foo"`.

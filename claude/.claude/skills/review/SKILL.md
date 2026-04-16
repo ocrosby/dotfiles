@@ -41,11 +41,34 @@ MODULE_ROOT=$(dirname <file>); while [ ! -f "$MODULE_ROOT/go.mod" ] && [ "$MODUL
 | Extension | Linter command (run from module/project root) |
 |---|---|
 | `.lua` | `stylua --check <file>` (if available); `luacheck --quiet <file>` (if available) |
-| `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` |
+| `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` then basedpyright (see below) |
 | `.go` | `cd <module-root> && golangci-lint run ./... && go test -race ./...` |
 | `.feature` | `gherkin-lint <file>` (if available) |
 
 For Go: if `golangci-lint` is not installed, fall back to `go vet ./...` — but note that `go vet` is a strict subset of golangci-lint and will miss issues that CI catches. Recommend installing golangci-lint to close the gap.
+
+**For Python files, also run basedpyright** after ruff. Resolve the nearest `pyproject.toml`
+root first (basedpyright must run from the package root to pick up the right config):
+
+```bash
+PKG_ROOT=<dir-of-file>
+while [ ! -f "$PKG_ROOT/pyproject.toml" ] && [ "$PKG_ROOT" != "/" ]; do
+  PKG_ROOT=$(dirname "$PKG_ROOT")
+done
+cd "$PKG_ROOT" && uv run basedpyright <file>
+```
+
+basedpyright failures are **Must Fix** — treat them the same as ruff failures. Pay
+particular attention to these diagnostics that ruff does not catch:
+
+| Diagnostic | What it means | Canonical fix |
+|---|---|---|
+| `reportUnusedCallResult` | Non-`None` return value silently discarded | Assign to `_`: `_ = await client.xadd(...)` |
+| `reportUntypedFunctionDecorator` | Decorator from an untyped library | `# pyright: ignore[reportUntypedFunctionDecorator]` on the decorator line |
+| `reportUnknownVariableType` | Import from a library without `py.typed` stubs | Import from the concrete submodule; add `# pyright: ignore[reportUnknownVariableType]` on the import line if unavoidable |
+| `"X is not exported from module Y"` | Package re-exports not recognised (no `py.typed`) | Change `from pkg import X` → `from pkg.submodule import X` |
+| Missing annotation on `ctx` in invoke tasks | `ctx` parameter has no type | Annotate as `ctx: Context` from `invoke.context` |
+| `str \| bytes` assigned to `str` field | gRPC/low-level APIs return `str \| bytes` | Narrow with `v.decode() if isinstance(v, bytes) else v`; never use `str(v)` on bytes |
 
 Report any lint errors under a **Lint** section before the per-file review. Example:
 

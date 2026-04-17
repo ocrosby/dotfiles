@@ -7,11 +7,22 @@ set -uo pipefail
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+LOG="$HOME/.claude/hooks/hook-debug.log"
 
 # Only process git commit commands
 [[ "$COMMAND" != *"git commit"* ]] && exit 0
 # Skip --amend (already committed, user chose to amend intentionally)
 [[ "$COMMAND" == *"--amend"* ]] && exit 0
+
+# Skip if the git commit itself failed — the commit doesn't exist yet,
+# so git log -1 would read the previous commit's message, not the attempted one.
+EXIT_CODE=$(echo "$INPUT" | jq -r '.tool_response.exit_code // 0' 2>/dev/null)
+if [[ "$EXIT_CODE" != "0" ]]; then
+  echo "$(date -u +%FT%TZ) [hook: commit-msg] skipped: git commit exited $EXIT_CODE" >> "$LOG"
+  exit 0
+fi
+
+echo "$(date -u +%FT%TZ) [hook: commit-msg] validating commit message" >> "$LOG"
 
 # Get the actual subject line from the most recent commit
 SUBJECT=$(cd "${CLAUDE_PROJECT_DIR:-.}" && git log -1 --pretty=%s 2>/dev/null)

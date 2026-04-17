@@ -13,14 +13,17 @@ FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null
 [[ ! -f "$FILE" ]] && exit 0
 
 HOOK="[hook: lint]"
+LOG="$HOME/.claude/hooks/hook-debug.log"
 
 case "${FILE##*.}" in
   py)
+    echo "$(date -u +%FT%TZ) $HOOK py: $FILE" >> "$LOG"
     command -v ruff &>/dev/null || exit 0
     echo "$HOOK ruff: checking $FILE"
     ruff check --quiet "$FILE" && ruff format --check --quiet "$FILE"
     ;;
   go)
+    echo "$(date -u +%FT%TZ) $HOOK go: $FILE" >> "$LOG"
     command -v go &>/dev/null || exit 0
     # Walk up to the module root so we lint the whole module, not just one package
     MODULE_ROOT="$(dirname "$FILE")"
@@ -36,9 +39,9 @@ case "${FILE##*.}" in
       LINT_BUILD_GO=$(golangci-lint --version 2>/dev/null | grep -oE 'built with go[0-9.]+' | grep -oE '[0-9]+\.[0-9]+([0-9.]+)?' | head -1)
       MOD_GO_VERSION=$(grep -m1 '^go ' "$MODULE_ROOT/go.mod" 2>/dev/null | awk '{print $2}')
       if [[ -n "$LINT_BUILD_GO" && -n "$MOD_GO_VERSION" ]]; then
-        LINT_MINOR=$(echo "$LINT_BUILD_GO" | cut -d. -f2)
-        MOD_MINOR=$(echo "$MOD_GO_VERSION" | cut -d. -f2)
-        if [[ "$LINT_MINOR" -lt "$MOD_MINOR" ]]; then
+        LINT_MINOR=$(echo "$LINT_BUILD_GO" | cut -d. -f2 | sed 's/[^0-9].*//')
+        MOD_MINOR=$(echo "$MOD_GO_VERSION" | cut -d. -f2 | sed 's/[^0-9].*//')
+        if [[ -n "$LINT_MINOR" && -n "$MOD_MINOR" && "$LINT_MINOR" -lt "$MOD_MINOR" ]]; then
           echo "$HOOK ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}."
           echo "golangci-lint will not run and lint issues will reach CI undetected."
           echo ""
@@ -51,7 +54,11 @@ case "${FILE##*.}" in
       # Lint only the package containing the changed file, not the whole module.
       # Faster per-edit; run golangci-lint ./... manually for a full module check.
       PKG_DIR="$(dirname "$FILE")"
-      REL_PKG="${PKG_DIR#${MODULE_ROOT}/}"
+      if [[ "$PKG_DIR" == "$MODULE_ROOT" ]]; then
+        REL_PKG="."
+      else
+        REL_PKG="${PKG_DIR#${MODULE_ROOT}/}"
+      fi
       echo "$HOOK golangci-lint: checking ./$REL_PKG"
       cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG"
     else
@@ -61,6 +68,7 @@ case "${FILE##*.}" in
     fi
     ;;
   lua)
+    echo "$(date -u +%FT%TZ) $HOOK lua: $FILE" >> "$LOG"
     # Run stylua first; also run luacheck if available
     if command -v stylua &>/dev/null; then
       echo "$HOOK stylua: checking $FILE"

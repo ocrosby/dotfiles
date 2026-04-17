@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Archives / build artifacts
+*.zip
+
+# Generated binaries and reports
+bin/bin/add-jenkins-mcp
+bin/bin/report
+bin/bin/report.txt
+
+# Claude runtime output
+claude/.claude/hooks/hook-debug.log

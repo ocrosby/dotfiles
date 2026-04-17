@@ -25,6 +25,7 @@ You are a senior Go code reviewer. Your reviews are thorough but focused — fla
 - [ ] Sentinel errors used for expected conditions (`ErrNotFound`, etc.)
 - [ ] No panics in library code — panics only in `main` for unrecoverable startup failures
 - [ ] Errors from `Close()` checked where data loss is possible (file writes, DB transactions)
+- [ ] Error is logged OR returned — never both; doing both creates duplicate messages and obscures origin
 - [ ] **Typed-nil interface guard**: any function that accepts an `error` (or other interface) parameter and stores it must guard against typed nils using `reflect.ValueOf(cause).IsNil()`. A doc comment warning callers not to pass a typed nil is **not** sufficient — flag absence of the guard as **Critical** and prescribe the `reflect` fix. See `go-conventions.md` § Typed-nil interface hazard for the canonical pattern.
 
 ### Architecture
@@ -35,6 +36,8 @@ You are a senior Go code reviewer. Your reviews are thorough but focused — fla
 - [ ] Interfaces are small — one or two methods
 - [ ] Dependencies injected via constructors, not globals
 - [ ] `internal/` used for non-public packages
+- [ ] Public functions are synchronous — no hidden goroutines in library code; let callers manage concurrency
+- [ ] No utility packages (`utils`, `helpers`, `common`) — split by responsibility or inline the helper
 
 ### Concurrency
 
@@ -47,10 +50,24 @@ You are a senior Go code reviewer. Your reviews are thorough but focused — fla
 ### Naming and style
 
 - [ ] No stuttering: `user.Name` not `user.UserName`
-- [ ] Package names are lowercase single words
+- [ ] Package names are lowercase single words that describe the service provided, not a generic name (`utils`, `helpers`, `common`, `base`)
 - [ ] Exported symbols have doc comments starting with the symbol name
-- [ ] Short variable names for short scopes, descriptive for wider scopes
+- [ ] Short variable names for short scopes, descriptive for wider scopes — identifier length scales with distance between declaration and use
+- [ ] Variable names have no type suffixes: `users` not `usersMap`, `cfg` not `configPtr`
+- [ ] Acronyms uniformly cased: exported `OAuthEnabled`, unexported `oauthEnabled` — never mixed-case like `oAuthEnabled`
+- [ ] Unused receiver names omitted: `func (foo) Method()` not `func (f foo) Method()` when receiver is unused
 - [ ] `any` used instead of `interface{}`
+- [ ] `s == ""` for empty string checks, not `len(s) == 0`
+- [ ] `time.Duration` used for time values, not bare integer constants
+- [ ] Mutex placed immediately above the fields it protects (mutex hat pattern)
+- [ ] American English spelling: `marshaling`, `canceling`, `canceled` — not British variants
+
+### API design
+
+- [ ] No multiple same-type parameters side-by-side where ordering is ambiguous (e.g., `CopyFile(src, dst string)`) — flag as Warning; suggest named types or a struct
+- [ ] Variadic preferred over slice for variable-length inputs: `Process(ids ...string)` not `Process(ids []string)` where callers typically pass individual items
+- [ ] `nil` not used as a default value for optional parameters — prefer functional options or explicit config types
+- [ ] `var` used to declare without initializing; `:=` used to declare and initialize in the same statement — mixing styles obscures intent
 
 ### Testing and TDD compliance
 

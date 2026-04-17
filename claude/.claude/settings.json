@@ -93,7 +93,8 @@
       "Bash(zsh:*)",
       "mcp__location__*",
       "mcp__insights__*",
-      "mcp__oapi__*"
+      "mcp__oapi__*",
+      "mcp__jenkins-*"
     ],
     "deny": []
   },
@@ -148,5 +149,8 @@
       }
     ]
   },
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  }
 }

@@ -28,9 +28,37 @@ func (s *UserService) CreateUser(ctx context.Context, name, email string) (*User
 - Use present tense, third person: "CreateUser creates..." not "Create a user"
 - Document error conditions: which errors can be returned and when
 - Document concurrency safety: "safe for concurrent use" or "not safe for concurrent use"
-- Package comment goes in `doc.go` or the primary file of the package
+- Package comment goes in `doc.go` for multi-file packages; single-file packages can comment the `package` declaration directly
 - Use named return parameters when they clarify which value is which (e.g., `(value, nextPos int)`)
 - Line comments (`//`) are the norm; block comments (`/* */`) for package-level or disabling code
+- Single space between sentences in comments — not double space
+- Compiler directives (`//go:generate`, `//go:build`) use no space after `//` — this distinguishes them from human-readable comments; separate them from the package comment with a blank line
+- For variables and constants, comment what they contain, not where they are used:
+
+```go
+// DefaultTimeout is the maximum duration to wait for a response
+// before aborting the request. Configurable per-client.
+var DefaultTimeout = 30 * time.Second
+```
+
+### Example Functions
+
+- Write `Example*` functions to document and test public API behavior:
+
+```go
+func ExampleEncode() {
+    var buf bytes.Buffer
+    err := json.NewEncoder(&buf).Encode(map[string]int{"a": 1})
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(buf.String())
+    // Output: {"a":1}
+}
+```
+
+- `// Output:` comments are verified by `go test` — they serve as both documentation and regression tests
+- Example functions appear in godoc alongside the symbols they document
 
 ## README
 

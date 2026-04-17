@@ -109,6 +109,17 @@ For non-code files (config, YAML, Markdown), review inline:
 - **Security**: injection risks, hardcoded credentials, sensitive data exposure
 - **Quality**: naming clarity, dead content, structural issues
 
+For `action.yml` / `action.yaml` files (GitHub Action definitions), apply this checklist:
+
+| Check | Rule |
+|---|---|
+| `name` uniqueness | Must be globally unique across the marketplace; should be suffixed with `by Jedi Knights` (e.g. `Semantic Release by Jedi Knights`) |
+| `description` length | Must be **< 125 characters** — GitHub truncates longer descriptions on the marketplace |
+| `branding` present | `branding.icon` and `branding.color` should be set |
+| `inputs` documented | Every input must have a `description`; sensitive inputs must set `required: false` and document the env var fallback |
+| `runs.using` | Composite (`using: composite`) steps must all set `shell:`; `node20` is preferred over `node16` for JS actions |
+| Secrets in composite | Never pass `secrets.*` directly as `env:` values inside composite `run:` steps — pass via `inputs` only |
+
 For `.github/workflows/*.yml` files, apply this additional checklist:
 
 | Check | What to look for |

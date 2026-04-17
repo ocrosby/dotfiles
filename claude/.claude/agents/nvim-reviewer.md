@@ -49,6 +49,17 @@ You are a senior Neovim plugin reviewer. Your reviews are thorough but focused �
 - [ ] Public functions validate input with `vim.validate`
 - [ ] No global variables — module-local state only
 
+### Design patterns
+
+See `rules/design-patterns-application.md` for recognition signals. Flag these as findings:
+
+- [ ] No large `if`/`elseif` chains dispatching on a state value — use a dispatch table (State pattern) — **Should Fix**
+- [ ] No large `if`/`elseif` chains selecting behavior variants — use a strategy table (`local strategies = { ... }`) — **Should Fix**
+- [ ] Editor event notification uses `nvim_create_autocmd` groups, not manual callback tables — **Should Fix**
+- [ ] Cross-cutting concerns (timing, logging, guards) wrap the original function rather than polluting it — **Should Fix**
+- [ ] Object creation varying by type uses a factory function (`M.new(kind, opts)`), not scattered conditionals — **Warning**
+- [ ] Pattern names used in module or function names match their GoF contract — mismatched naming flagged as **Warning**
+
 ### Performance
 
 - [ ] No synchronous operations that block the main loop (network, large file reads)

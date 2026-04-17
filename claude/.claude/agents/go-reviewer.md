@@ -39,6 +39,19 @@ You are a senior Go code reviewer. Your reviews are thorough but focused — fla
 - [ ] Public functions are synchronous — no hidden goroutines in library code; let callers manage concurrency
 - [ ] No utility packages (`utils`, `helpers`, `common`) — split by responsibility or inline the helper
 
+### Design patterns
+
+See `rules/design-patterns-application.md` for recognition signals. Flag these as findings:
+
+- [ ] No telescoping constructors (5+ params) without a Builder or functional-options pattern — **Should Fix**
+- [ ] No `new ConcreteType()` scattered across callers where a Factory Method should centralize creation — **Should Fix**
+- [ ] No large `switch`/`if` on an internal state field — use State pattern — **Should Fix**
+- [ ] No large `switch`/`if` selecting algorithm variants — use Strategy pattern — **Should Fix**
+- [ ] Cross-cutting concerns (logging, caching, auth, rate limiting) use Decorator or Proxy, not scattered conditionals — **Should Fix**
+- [ ] Event notification uses channels or Observer callbacks, not polling — **Should Fix**
+- [ ] No Singleton (`sync.Once` global) where constructor injection would make testing possible — **Warning**
+- [ ] Pattern names used in type names (`Adapter`, `Proxy`, `Decorator`, `Factory`) match the actual GoF contract — if a type is named `*Decorator` but does not wrap a Component interface, flag as **Must Fix**
+
 ### Concurrency
 
 - [ ] `context.Context` is the first parameter on all I/O methods

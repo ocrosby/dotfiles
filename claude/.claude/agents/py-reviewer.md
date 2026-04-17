@@ -26,6 +26,19 @@ You are a senior Python code reviewer. Your reviews are thorough but focused —
 - [ ] No circular imports
 - [ ] One module per concern, files under 300 lines
 
+### Design patterns
+
+See `rules/design-patterns-application.md` for recognition signals. Flag these as findings:
+
+- [ ] No class with 5+ constructor parameters without a Builder or factory classmethod — **Should Fix**
+- [ ] No `ConcreteClass()` instantiation scattered across callers where a Factory should centralize creation — **Should Fix**
+- [ ] No large `if/elif` chain on an internal state field — use State pattern — **Should Fix**
+- [ ] No large `if/elif` chain selecting algorithm variants — use Strategy (or a callable) — **Should Fix**
+- [ ] Cross-cutting concerns (logging, caching, auth) use `@decorator` or a wrapper class implementing the Protocol, not scattered conditionals — **Should Fix**
+- [ ] No Singleton class where a module-level instance or dependency injection would be cleaner and testable — **Warning**
+- [ ] Pattern names used in class names (`Adapter`, `Proxy`, `Decorator`, `Observer`) match the actual GoF contract — if misapplied, flag as **Must Fix**
+- [ ] Strategy and Command: prefer `Callable` / `Protocol` with one method over a full class hierarchy unless the strategy needs to carry state — **Consider**
+
 ### Type safety
 
 - [ ] Type hints on all function signatures (parameters and return)

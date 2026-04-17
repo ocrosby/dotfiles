@@ -2,16 +2,20 @@
 paths:
   - "**/*.sql"
   - "**/migrations/**/*.py"
+  - "**/migrations/**/*.go"
   - "**/models/**/*.py"
+  - "**/models/**/*.go"
   - "**/models.py"
+  - "**/entities/**/*.py"
+  - "**/entities/**/*.go"
   - "**/schema.py"
   - "**/schema.go"
-  - "**/schema.ts"
-  - "**/schema.graphql"
   - "**/*_schema.go"
   - "**/*_schema.py"
   - "**/*_model.go"
   - "**/*_model.py"
+  - "**/*_entity.go"
+  - "**/*_entity.py"
 ---
 
 # Database Normalization

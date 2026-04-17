@@ -94,7 +94,8 @@
       "mcp__location__*",
       "mcp__insights__*",
       "mcp__oapi__*",
-      "mcp__jenkins-*"
+      "mcp__jenkins-*",
+      "mcp__context7__*"
     ],
     "deny": []
   },
@@ -126,6 +127,15 @@
             "command": "~/.claude/hooks/tdd-remind.sh"
           }
         ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/sensitive-file-warn.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -144,6 +154,36 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/commit-msg.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/secret-scan.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-compact.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-stop.sh"
           }
         ]
       }

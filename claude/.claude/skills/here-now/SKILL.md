@@ -1,23 +1,23 @@
 ---
 description: Researches a topic using live web sources, synthesizes a structured report, and publishes it to here.now — returns a live URL.
 triggers:
-  - /study
+  - /here-now
 ---
 
-# Study: Research and Publish to here.now
+# Here Now: Research and Publish to here.now
 
 Use this skill to research any topic and publish a self-contained report to here.now.
 
 ## Usage
 
 ```
-/study <topic>              # research and publish anonymously (link expires in 24 hours)
-/study <topic> --keep       # publish permanently (requires HERE_NOW_API_KEY env var)
+/here-now <topic>              # research and publish anonymously (link expires in 24 hours)
+/here-now <topic> --keep       # publish permanently (requires HERE_NOW_API_KEY env var)
 ```
 
 ## When to use
 
-Invoke `/study` when you want to research a topic, synthesize it into a shareable report, and get a live URL back. Do not invoke when the user only wants a conversational answer — this skill always publishes.
+Invoke `/here-now` when you want to research a topic, synthesize it into a shareable report, and get a live URL back. Do not invoke when the user only wants a conversational answer — this skill always publishes.
 
 ## Workflow
 

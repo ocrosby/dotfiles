@@ -2,8 +2,8 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
-      "Edit",
-      "Write",
+      "Edit(**)",
+      "Write(**)",
       "Bash(awk:*)",
       "Bash(basename:*)",
       "Bash(bash:*)",

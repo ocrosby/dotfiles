@@ -1,5 +1,5 @@
 ---
-description: Creates a feature or hotfix branch, commits staged changes, pushes to remote, and opens a detailed PR against main.
+description: Creates a feature or hotfix branch, commits staged changes, pushes to remote, and opens a detailed PR against main. Supports -m to commit directly to main instead.
 triggers:
   - /ship
 ---
@@ -16,6 +16,7 @@ Use this skill when the user wants to ship work on a new branch and open a pull 
 /ship feature <branch-name>           # force feature/ prefix
 /ship hotfix <branch-name>            # force hotfix/ prefix
 /ship [feature|hotfix] <branch-name> <base-branch>  # override base branch (default: main)
+/ship -m                               # commit and push directly to main — no branch, no PR
 ```
 
 **Prefix inference** (when not explicitly provided):
@@ -25,11 +26,15 @@ Use this skill when the user wants to ship work on a new branch and open a pull 
 
 An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 
+**`-m` flag**: skips branch creation, PR creation, and the branch-name confirmation step. Commits directly to `main` and pushes. Use for trivial changes (docs, config, typos) that do not need review.
+
 ## Workflow
 
 ### 0. Detect Active Ship Branch
 
 Before anything else, run `git branch --show-current` to check the current branch.
+
+**If `-m` was passed**: skip to the [Direct-to-Main Workflow](#direct-to-main-workflow) section — do not run steps 4, 5, 8, or 9.
 
 - If the current branch **is** `main` or `master`, run the full workflow (steps 1–9).
 - If the current branch is **not** `main` or `master`, determine the state of the remote branch before proceeding:
@@ -196,10 +201,52 @@ Keep the title under 70 characters.
 
 Always output the PR URL at the end so the user can open it directly.
 
+## Direct-to-Main Workflow
+
+**Only run this section when `-m` is passed. Skip it otherwise.**
+
+### M1. Ensure on Main
+
+```bash
+git branch --show-current
+```
+
+If not already on `main` or `master`:
+
+```bash
+git stash
+git checkout main && git pull origin main
+git stash pop
+```
+
+### M2. Lint and Tests
+
+Run Steps 2 and 3 exactly as in the standard workflow. **If either fails: stop and do not commit.**
+
+### M3. Stage and Commit
+
+Stage relevant files and write a Conventional Commit message (same rules as Step 6).
+
+```bash
+git add <files>
+git commit -m "..."
+```
+
+### M4. Push to Main
+
+```bash
+git push origin main
+```
+
+Report the pushed commit hash and message. Do not open a PR.
+
+---
+
 ## Rules
 
 - Never force-push or use `--no-verify`
-- Never commit to `main` or `master` directly
+- Without `-m`: never commit to `main` or `master` directly
+- With `-m`: commit directly to `main` — no branch, no PR
 - If the working tree is clean, tell the user there's nothing to ship
 - If there are untracked files that seem relevant, ask whether to include them
 - Use the conventional-commits rule for all commit messages

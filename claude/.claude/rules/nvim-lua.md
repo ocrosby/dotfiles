@@ -92,6 +92,11 @@ vim.uv.fs_stat(path, function(err, stat) ... end)
 vim.loop.fs_stat(path, function(err, stat) ... end)
 ```
 
+## Documentation
+
+- Every module, public function, and non-trivial private function gets a `---` LuaLS doc comment describing what it does
+- Use `---@param`, `---@return`, and `---@field` annotations for type information
+
 ## Code Quality
 
 - Functions ≤ 40 lines, cyclomatic complexity ≤ 7

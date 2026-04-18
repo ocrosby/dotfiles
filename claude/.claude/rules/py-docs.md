@@ -8,8 +8,7 @@ paths:
 
 ## Docstrings
 
-- Use Google-style docstrings on all public modules, classes, and functions
-- Private/internal functions do not require docstrings unless the logic is non-obvious
+- Use Google-style docstrings on all modules, classes, and functions — public and private alike
 
 ### Format
 

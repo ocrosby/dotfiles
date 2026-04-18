@@ -2,6 +2,8 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
+      "Edit",
+      "Write",
       "Bash(awk:*)",
       "Bash(basename:*)",
       "Bash(bash:*)",
@@ -9,6 +11,7 @@
       "Bash(brew:*)",
       "Bash(bun:*)",
       "Bash(cat:*)",
+      "Bash(cd:*)",
       "Bash(chmod:*)",
       "Bash(chown:*)",
       "Bash(comm:*)",
@@ -64,6 +67,7 @@
       "Bash(realpath:*)",
       "Bash(rg:*)",
       "Bash(rm:*)",
+      "Bash(ruff:*)",
       "Bash(rsync:*)",
       "Bash(scp:*)",
       "Bash(sed:*)",

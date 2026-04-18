@@ -14,7 +14,15 @@ Use this skill when you want an explicit, structured review of changed or specif
 /review                    # review all files changed since last commit
 /review <file-or-glob>     # review specific files
 /review HEAD~3             # review all changes in the last 3 commits
+/review -f                  # review + automatically fix all Must Fix and Should Fix findings
+/review -f <file-or-glob>   # same, scoped to specific files
+/review -fc                 # review + fix + repeat until no findings remain
+/review -fc <file-or-glob>  # same, scoped to specific files
 ```
+
+- `-f` — fix all findings once, then stop
+- `-fc` — fix all findings, re-review, fix again, repeat until the review is clean (implies `-f`)
+- Without either flag, the skill only reports
 
 ## Workflow
 
@@ -41,34 +49,12 @@ MODULE_ROOT=$(dirname <file>); while [ ! -f "$MODULE_ROOT/go.mod" ] && [ "$MODUL
 | Extension | Linter command (run from module/project root) |
 |---|---|
 | `.lua` | `stylua --check <file>` (if available); `luacheck --quiet <file>` (if available) |
-| `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` then basedpyright (see below) |
+| `.py` | `ruff check --quiet <file> && ruff format --check --quiet <file>` |
 | `.go` | `cd <module-root> && golangci-lint run ./... && go test -race ./...` |
 | `.feature` | `gherkin-lint <file>` (if available) |
 
 For Go: if `golangci-lint` is not installed, fall back to `go vet ./...` — but note that `go vet` is a strict subset of golangci-lint and will miss issues that CI catches. Recommend installing golangci-lint to close the gap.
 
-**For Python files, also run basedpyright** after ruff. Resolve the nearest `pyproject.toml`
-root first (basedpyright must run from the package root to pick up the right config):
-
-```bash
-PKG_ROOT=<dir-of-file>
-while [ ! -f "$PKG_ROOT/pyproject.toml" ] && [ "$PKG_ROOT" != "/" ]; do
-  PKG_ROOT=$(dirname "$PKG_ROOT")
-done
-cd "$PKG_ROOT" && uv run basedpyright <file>
-```
-
-basedpyright failures are **Must Fix** — treat them the same as ruff failures. Pay
-particular attention to these diagnostics that ruff does not catch:
-
-| Diagnostic | What it means | Canonical fix |
-|---|---|---|
-| `reportUnusedCallResult` | Non-`None` return value silently discarded | Assign to `_`: `_ = await client.xadd(...)` |
-| `reportUntypedFunctionDecorator` | Decorator from an untyped library | `# pyright: ignore[reportUntypedFunctionDecorator]` on the decorator line |
-| `reportUnknownVariableType` | Import from a library without `py.typed` stubs | Import from the concrete submodule; add `# pyright: ignore[reportUnknownVariableType]` on the import line if unavoidable |
-| `"X is not exported from module Y"` | Package re-exports not recognised (no `py.typed`) | Change `from pkg import X` → `from pkg.submodule import X` |
-| Missing annotation on `ctx` in invoke tasks | `ctx` parameter has no type | Annotate as `ctx: Context` from `invoke.context` |
-| `str \| bytes` assigned to `str` field | gRPC/low-level APIs return `str \| bytes` | Narrow with `v.decode() if isinstance(v, bytes) else v`; never use `str(v)` on bytes |
 
 Report any lint errors under a **Lint** section before the per-file review. Example:
 
@@ -163,9 +149,72 @@ After all files are reviewed, write a one-paragraph summary:
 - The most important issue if any
 - Any cross-cutting pattern across files worth noting
 
+### 7. Auto-Fix (only when `-f` is passed)
+
+**If `-f` was not passed: stop here.**
+
+If `-f` was passed, address every **Must Fix** and **Should Fix** finding from the report. Do not apply **Consider** items — those remain suggestions.
+
+Work through findings in this order:
+1. All Must Fix items across all files
+2. All Should Fix items across all files
+
+For each fix:
+- Apply the change directly using Edit or Write
+- Do not ask for confirmation — the `-f` flag is the authorization
+
+After all fixes are applied, re-run the linters from Step 2 on the modified files. Report a final **Fixes Applied** section:
+
+```
+## Fixes Applied
+
+- <filename>:<line> — <what was fixed>
+- <filename>:<line> — <what was fixed>
+
+Linters: ✓ clean  (or list any remaining failures)
+```
+
+If a finding cannot be automatically fixed (e.g. requires architectural change, missing context, or external dependency), note it as **Needs Manual Fix** instead of skipping it silently.
+
+### 8. Continuous Loop (only when `-fc` is passed)
+
+**If `-fc` was not passed: stop here.**
+
+After Step 7 completes, run a full second review (Steps 1–6) on the same scope. If the second review produces any Must Fix or Should Fix findings, apply them (Step 7) and review again. Repeat until either:
+
+- The review reports zero Must Fix and Should Fix findings → print `✓ Clean — no further findings` and stop
+- 5 iterations have been completed without reaching clean → stop and report remaining findings as **Needs Manual Fix**, noting the iteration cap was reached
+
+Track the iteration count and print a header at the start of each pass:
+
+```
+--- Pass 2 ---
+--- Pass 3 ---
+```
+
+Consider items are never a reason to continue looping — only Must Fix and Should Fix count.
+
+Once the loop exits (clean or iteration cap reached), print a final **Session Summary** covering all passes:
+
+```
+## Session Summary
+
+### Remaining Findings
+- <filename>:<line> — <issue> [Must Fix | Should Fix | Needs Manual Fix]
+(or "None — all findings resolved" if clean)
+
+### Consider Items
+- <filename>:<line> — <suggestion>
+(or "None" if there were no Consider items across any pass)
+```
+
+Collect Consider items from every pass (not just the last), de-duplicate them, and include them all. This gives a complete picture of optional improvements regardless of how many iterations ran.
+
 ## Rules
 
 - Report issues with file and line number when possible
 - Distinguish between blocking issues and suggestions — not everything is a Must Fix
-- Do not rewrite code unless the user asks; describe what to change and why
+- Without `-f`: describe what to change and why — do not modify code
+- With `-f` or `-fc`: apply all Must Fix and Should Fix changes directly without asking
+- `-fc` loops until clean or 5 iterations — whichever comes first
 - If a pattern appears in multiple files, call it out as a systemic issue rather than repeating the same comment

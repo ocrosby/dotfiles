@@ -44,6 +44,29 @@ nvim --headless -c "PlenaryBustedFile tests/plugin-name/module_spec.lua"
 
 ## Writing Tests
 
+### Arrange / Act / Assert
+
+Structure every test with three labeled comment sections:
+
+```lua
+it("returns nil when buffer is invalid", function()
+  -- Arrange
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_delete(buf, { force = true })
+
+  -- Act
+  local result = mymodule.process(buf)
+
+  -- Assert
+  assert.is_nil(result)
+end)
+```
+
+- Always include all three `-- Arrange`, `-- Act`, and `-- Assert` comments even when a section is short
+- Keep each section visually distinct — a blank line before each comment
+
+### General
+
 - Test the public API, not internal helpers — internals can change freely
 - One behavior per test, descriptive names: `it("returns nil when buffer is invalid")`
 - Create isolated test buffers — never depend on editor state from other tests

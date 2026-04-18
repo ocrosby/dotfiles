@@ -7,8 +7,7 @@ paths:
 
 ## Godoc Conventions
 
-- Every exported type, function, method, and package has a doc comment
-- Unexported symbols do not require comments unless the logic is non-obvious
+- Every type, function, method, and package — exported or unexported — has a doc comment
 - Comments start with the name of the thing being documented
 
 ### Format

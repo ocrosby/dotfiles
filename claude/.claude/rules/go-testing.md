@@ -21,6 +21,31 @@ paths:
 
 ## Writing Tests
 
+### Arrange / Act / Assert
+
+Structure every test with three labeled comment sections:
+
+```go
+func TestCreateUser_DuplicateEmail(t *testing.T) {
+    // Arrange
+    repo := &fakeRepo{users: map[string]*User{}}
+    svc := NewUserService(repo)
+    _ = svc.Create(context.Background(), "Alice", "a@b.com")
+
+    // Act
+    _, err := svc.Create(context.Background(), "Bob", "a@b.com")
+
+    // Assert
+    if !errors.Is(err, ErrDuplicateEmail) {
+        t.Errorf("got %v, want ErrDuplicateEmail", err)
+    }
+}
+```
+
+- Always include all three `// Arrange`, `// Act`, and `// Assert` comments even when a section is short
+- Keep each section visually distinct — a blank line before each comment
+- In table-driven tests, put AAA comments inside the `t.Run` subtest body
+
 ### Table-driven tests
 
 ```go

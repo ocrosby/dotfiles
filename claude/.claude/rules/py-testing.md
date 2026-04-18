@@ -28,6 +28,28 @@ tests/
 
 ## Writing Tests
 
+### Arrange / Act / Assert
+
+Structure every test with three labeled comment sections:
+
+```python
+def test_create_user_raises_on_duplicate_email(user_service: UserService):
+    # Arrange
+    existing = User(name="Alice", email="a@b.com")
+    user_service.repo.save(existing)
+
+    # Act
+    with pytest.raises(DuplicateEmailError):
+        user_service.create(name="Bob", email="a@b.com")
+
+    # Assert (implicit via pytest.raises context manager above)
+```
+
+- Always include all three `# Arrange`, `# Act`, and `# Assert` comments even when a section is short
+- Keep each section visually distinct — a blank line before each comment
+
+### General
+
 - Test the public API, not private internals
 - One behavior per test, descriptive names: `test_create_user_raises_on_duplicate_email`
 - Use fixtures for setup/teardown — avoid `setUp` / `tearDown` methods

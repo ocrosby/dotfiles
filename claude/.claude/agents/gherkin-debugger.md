@@ -2,7 +2,7 @@
 name: gherkin-debugger
 description: Diagnoses and fixes bugs in Gherkin BDD test suites — undefined steps, scenario coupling, state leakage, and CI environment failures. Use when encountering test failures in Gherkin feature files or step definitions.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 

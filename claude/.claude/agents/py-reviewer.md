@@ -2,7 +2,7 @@
 name: py-reviewer
 description: Reviews Python code for correctness, architecture, type safety, and idiomatic patterns. Use proactively after writing or modifying Python code.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 
@@ -35,7 +35,7 @@ See `rules/design-patterns-application.md` for recognition signals. Flag these a
 - [ ] No large `if/elif` chain on an internal state field — use State pattern — **Should Fix**
 - [ ] No large `if/elif` chain selecting algorithm variants — use Strategy (or a callable) — **Should Fix**
 - [ ] Cross-cutting concerns (logging, caching, auth) use `@decorator` or a wrapper class implementing the Protocol, not scattered conditionals — **Should Fix**
-- [ ] No Singleton class where a module-level instance or dependency injection would be cleaner and testable — **Warning**
+- [ ] Prefer a module-level instance or constructor injection over a Singleton class when testability matters — **Should Fix**
 - [ ] Pattern names used in class names (`Adapter`, `Proxy`, `Decorator`, `Observer`) match the actual GoF contract — if misapplied, flag as **Must Fix**
 - [ ] Strategy and Command: prefer `Callable` / `Protocol` with one method over a full class hierarchy unless the strategy needs to carry state — **Consider**
 

@@ -37,26 +37,20 @@ Read `rules/design-patterns.md` for the full catalog when a specific pattern mat
 
 ### 4. Identify Pattern Signals
 
-Scan the code (or interpret the description) for these signals. For each signal found, record:
+Apply the recognition signals exactly as defined in `rules/design-patterns-application.md`. Do not substitute your own judgment for the signal table — match against that table only.
+
+For each signal found, record:
 - The exact code location (file, line number or function name)
 - Which pattern it maps to
 - Why (the specific structural problem present)
-
-Signals by category (from `rules/design-patterns-application.md`):
-
-**Creational**: constructor with 5+ parameters; `new ConcreteType()` scattered in callers; object families that must be compatible; template instances copied with variation; single shared global resource.
-
-**Structural**: incompatible third-party interface; class growing in two dimensions; recursive tree of uniform nodes; optional combinable behaviors; complex multi-step subsystem init; thousands of similar objects; cross-cutting concerns wrapped around an object.
-
-**Behavioral**: pipeline of handlers with dynamic order; UI action decoupled from logic + undo needed; collection traversal abstracted from structure; many components with circular dependencies; state snapshot for undo; large switch on state field; large switch on algorithm; shared algorithm skeleton with variations; new operations on a fixed hierarchy.
 
 **If no signals are found**: skip to step 6 and report no opportunities.
 
 ### 5. Generate Recommendations
 
-For each signal, produce one recommendation block:
+For each signal, produce one recommendation block using this template:
 
-```
+~~~
 ### <Pattern Name> (<Category>)
 
 **Signal:** <exact code location and what was observed>
@@ -74,7 +68,7 @@ For each signal, produce one recommendation block:
 ```
 
 **Trade-off:** <what applying this costs vs. what it gains in this specific context>
-```
+~~~
 
 **Hard limits:**
 - Never recommend more than 3 patterns per file. If more signals exist, list the top 3 by severity of current pain.
@@ -121,6 +115,26 @@ If the user asks to implement a recommended pattern:
 - Confirm the specific pattern, the participants, and the target files before writing any code.
 - Delegate to the appropriate language agent for implementation: `go-architect`, `py-architect`, or `nvim-architect`.
 - Do not write production code in this skill — it is analysis and recommendation only.
+
+### 9. Verify the Report
+
+Before delivering the final report, confirm all of the following:
+- Every recommendation cites a specific file and line number or function name — remove any recommendation that does not.
+- No file has more than 3 recommendations — if more signals exist, keep the top 3 by severity of current pain and discard the rest.
+- Every sketch is syntactically plausible for the target language.
+- The report structure matches the template from step 7 exactly.
+
+**If any check fails: fix the report before responding.**
+
+## When NOT to use
+
+Do not invoke `/patterns` on:
+- Configuration files (YAML, TOML, JSON, `.env`)
+- Data schema files (SQL migrations, Protobuf, OpenAPI specs)
+- Test fixtures and factory data
+- Markdown documentation
+
+GoF structural patterns apply to runtime behavior. Files that are not executed at runtime are not candidates.
 
 ## Rules
 

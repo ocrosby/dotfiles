@@ -2,7 +2,7 @@
 name: gherkin-reviewer
 description: Reviews Gherkin feature files and step definitions for BDD best practices, clarity, and maintainability. Use proactively after writing or modifying feature files.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 

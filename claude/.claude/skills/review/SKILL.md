@@ -79,7 +79,7 @@ Report any lint errors under a **Lint** section before the per-file review. Exam
 
 Do not proceed to the semantic review until lint failures are resolved.
 
-### 4. Detect the Language and REST API Presence
+### 3. Detect the Language and REST API Presence
 
 | Extension / Path | Reviewer Agent |
 |---|---|
@@ -97,7 +97,7 @@ Do not proceed to the semantic review until lint failures are resolved.
 
 If REST API patterns are detected, invoke `rest-reviewer` on those files **in addition to** the language-specific agent.
 
-### 5. Delegate to Reviewer Agents
+### 4. Delegate to Reviewer Agents
 
 For each language group, invoke the appropriate reviewer agent. Pass it the specific files to review.
 
@@ -133,7 +133,7 @@ For `.github/workflows/*.yml` files, apply this additional checklist:
 | Concurrency | Release workflows should have `concurrency: { group: release, cancel-in-progress: false }` to prevent parallel releases |
 | Action versions | Prefer pinned major versions (`@v4`, `@v9`) over `@latest` to avoid unexpected breakage |
 
-### 6. Compile the Report
+### 5. Compile the Report
 
 Aggregate agent findings into this structure for each file:
 
@@ -156,7 +156,7 @@ Aggregate agent findings into this structure for each file:
 
 If a file has no issues, write: `✓ <filename> — no issues found`
 
-### 7. Summary
+### 6. Summary
 
 After all files are reviewed, write a one-paragraph summary:
 - Overall assessment: ready to ship / needs work / significant concerns

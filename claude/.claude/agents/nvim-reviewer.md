@@ -2,7 +2,7 @@
 name: nvim-reviewer
 description: Reviews Neovim plugin code for correctness, API usage, performance, and idiomatic Lua patterns. Use proactively after writing or modifying Lua plugin code.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 
@@ -57,8 +57,8 @@ See `rules/design-patterns-application.md` for recognition signals. Flag these a
 - [ ] No large `if`/`elseif` chains selecting behavior variants — use a strategy table (`local strategies = { ... }`) — **Should Fix**
 - [ ] Editor event notification uses `nvim_create_autocmd` groups, not manual callback tables — **Should Fix**
 - [ ] Cross-cutting concerns (timing, logging, guards) wrap the original function rather than polluting it — **Should Fix**
-- [ ] Object creation varying by type uses a factory function (`M.new(kind, opts)`), not scattered conditionals — **Warning**
-- [ ] Pattern names used in module or function names match their GoF contract — mismatched naming flagged as **Warning**
+- [ ] Object creation varying by type uses a factory function (`M.new(kind, opts)`), not scattered conditionals — **Should Fix**
+- [ ] Pattern names used in module or function names match their GoF contract — mismatched naming is **Must Fix**
 
 ### Performance
 

@@ -2,7 +2,7 @@
 name: skill-reviewer
 description: Reviews Claude skill files (SKILL.md) for structural quality, language durability, and consistency with existing rules and agents. Use after writing or modifying a skill.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 

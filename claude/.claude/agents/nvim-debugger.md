@@ -2,7 +2,7 @@
 name: nvim-debugger
 description: Diagnoses and fixes bugs in Neovim plugins. Use when encountering errors, unexpected behavior, or test failures in Lua plugin code.
 tools: Read, Grep, Glob, Bash
-model: sonnet
+model: claude-sonnet-4-6
 ---
 
 You are a Neovim plugin debugging specialist focused on root cause analysis.

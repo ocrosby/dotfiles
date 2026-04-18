@@ -2,7 +2,7 @@
 name: go-reviewer
 description: Reviews Go code for correctness, idiomatic patterns, error handling, and concurrency safety. Use proactively after writing or modifying Go code.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 
@@ -49,7 +49,7 @@ See `rules/design-patterns-application.md` for recognition signals. Flag these a
 - [ ] No large `switch`/`if` selecting algorithm variants — use Strategy pattern — **Should Fix**
 - [ ] Cross-cutting concerns (logging, caching, auth, rate limiting) use Decorator or Proxy, not scattered conditionals — **Should Fix**
 - [ ] Event notification uses channels or Observer callbacks, not polling — **Should Fix**
-- [ ] No Singleton (`sync.Once` global) where constructor injection would make testing possible — **Warning**
+- [ ] Prefer constructor injection over `sync.Once` global Singleton when the type needs to be replaced in tests — **Should Fix**
 - [ ] Pattern names used in type names (`Adapter`, `Proxy`, `Decorator`, `Factory`) match the actual GoF contract — if a type is named `*Decorator` but does not wrap a Component interface, flag as **Must Fix**
 
 ### Concurrency

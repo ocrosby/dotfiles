@@ -2,7 +2,7 @@
 name: rest-reviewer
 description: Reviews HTTP handler and route code for REST API convention compliance — resource naming, HTTP method semantics, status codes, statelessness, and caching. Use when reviewing any code that defines HTTP endpoints.
 tools: Read, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-6
 permissionMode: plan
 ---
 

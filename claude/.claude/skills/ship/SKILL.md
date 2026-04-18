@@ -132,7 +132,7 @@ Derive the branch prefix from the conventional commit type of the changes:
 
 - If the user passed `feature` or `hotfix` explicitly, use that — it overrides the inferred prefix
 - Propose a full branch name (e.g., `feature/add-user-auth`, `hotfix/fix-null-pointer`)
-- Ask for confirmation before proceeding
+- Ask for confirmation before proceeding — **always end the message with an explicit prompt such as: "Confirm this branch name to proceed, or suggest an alternative."** The user must not have to guess that you are waiting.
 
 ### 5. Create the Branch from Latest Main
 

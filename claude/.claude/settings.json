@@ -31,6 +31,7 @@
       "Bash(find:*)",
       "Bash(gh:*)",
       "Bash(git:*)",
+      "Bash(go:*)",
       "Bash(grep:*)",
       "Bash(gunzip:*)",
       "Bash(gzip:*)",
@@ -99,7 +100,9 @@
       "mcp__insights__*",
       "mcp__oapi__*",
       "mcp__jenkins-*",
-      "mcp__context7__*"
+      "mcp__context7__*",
+      "WebFetch",
+      "Skill(update-config)"
     ],
     "deny": []
   },

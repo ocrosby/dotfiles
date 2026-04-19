@@ -2,6 +2,9 @@
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
+      "Edit(**)",
+      "Write(**)",
+      "Bash(*)",
       "Bash(awk:*)",
       "Bash(basename:*)",
       "Bash(bash:*)",
@@ -9,6 +12,7 @@
       "Bash(brew:*)",
       "Bash(bun:*)",
       "Bash(cat:*)",
+      "Bash(cd:*)",
       "Bash(chmod:*)",
       "Bash(chown:*)",
       "Bash(comm:*)",
@@ -28,6 +32,8 @@
       "Bash(find:*)",
       "Bash(gh:*)",
       "Bash(git:*)",
+      "Bash(go:*)",
+      "Bash(golangci-lint:*)",
       "Bash(grep:*)",
       "Bash(gunzip:*)",
       "Bash(gzip:*)",
@@ -53,6 +59,7 @@
       "Bash(patch:*)",
       "Bash(pip:*)",
       "Bash(pip3:*)",
+      "Bash(pytest:*)",
       "Bash(pkill:*)",
       "Bash(pnpm:*)",
       "Bash(printf:*)",
@@ -64,6 +71,7 @@
       "Bash(realpath:*)",
       "Bash(rg:*)",
       "Bash(rm:*)",
+      "Bash(ruff:*)",
       "Bash(rsync:*)",
       "Bash(scp:*)",
       "Bash(sed:*)",
@@ -95,9 +103,12 @@
       "mcp__insights__*",
       "mcp__oapi__*",
       "mcp__jenkins-*",
-      "mcp__context7__*"
+      "mcp__context7__*",
+      "WebFetch",
+      "Skill(update-config)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": ["/tmp"]
   },
   "hooks": {
     "PreToolUse": [

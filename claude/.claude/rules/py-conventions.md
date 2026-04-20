@@ -71,7 +71,11 @@ Keep the dependency direction inward: adapters depend on ports, ports depend on 
 - Type hints on all function signatures (parameters and return types)
 - Type hints on class attributes and instance variables
 - Use `Protocol` for structural subtyping over ABC where possible
-- Use `TypeAlias`, `TypeVar`, and generics where they improve clarity
+- Prefer `X | Y` over `Union[X, Y]` and `X | None` over `Optional[X]` (3.10+)
+- Use `Self` from `typing` for methods that return `self` or a new instance of the same class (3.11+)
+- Mark overriding methods with `@override` from `typing` so type checkers catch mismatches (3.12+)
+- Use `type Alias = ...` for type aliases instead of `TypeAlias` annotation (3.12+)
+- Use `TypeVar`, generics, and `ParamSpec` where they improve clarity
 
 ## Testing
 
@@ -110,11 +114,17 @@ In semantic-release `build_command`, `uv lock` must run *before* any `uv run` st
 - Use `in` for multiple value checks: `if x in ("a", "b", "c")` instead of chained `or`
 - Use `or` for default values: `name = value or "default"`
 - Prefer compound assignment operators (`+=`, `-=`, etc.)
+- Use `match`/`case` (structural pattern matching) for complex dispatch on type or structure instead of `if/elif` chains (3.10+)
+- Use `zip(..., strict=True)` when both iterables must be the same length (3.10+)
+- Use `asyncio.TaskGroup` instead of `asyncio.gather()` for concurrent tasks — better error propagation and cancellation (3.11+)
+- Use `asyncio.timeout()` context manager instead of `asyncio.wait_for()` for timeout control (3.11+)
+- Use `except*` and `ExceptionGroup` when handling errors from concurrent tasks (3.11+)
+- Add `slots=True` to `@dataclass` for memory-critical domain entities (3.10+)
+- Use `itertools.batched(iterable, n)` to chunk a sequence into fixed-size groups (3.12+)
 
 ## Code Quality
 
-- ruff for linting and import sorting
-- black for formatting
+- ruff for linting, import sorting, and formatting (`ruff check` + `ruff format`) — replaces black
 - Functions ≤ 30 lines, cyclomatic complexity ≤ 7
 - Files ≤ 300 lines; split when exceeded
 

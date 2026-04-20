@@ -46,6 +46,9 @@ See `rules/design-patterns-application.md` for recognition signals. Flag these a
 - [ ] `Protocol` used for structural subtyping where appropriate
 - [ ] No `Any` without justification
 - [ ] Pydantic models for all API boundaries
+- [ ] `X | Y` used instead of `Union[X, Y]`; `X | None` instead of `Optional[X]` — **Warning** (outdated 3.9 style)
+- [ ] `Self` used for methods that return `self` or a new same-type instance — **Suggestion**
+- [ ] Overriding methods decorated with `@override` from `typing` — **Suggestion**
 
 ### FastAPI (if applicable)
 
@@ -79,6 +82,10 @@ See `rules/design-patterns-application.md` for recognition signals. Flag these a
 - [ ] `dataclass` or Pydantic for structured data, not plain dicts
 - [ ] Context managers (`with`) for all resource management
 - [ ] Modern type syntax (`str | None` not `Optional[str]`)
+- [ ] `asyncio.TaskGroup` used instead of `asyncio.gather()` for concurrent tasks — **Warning**
+- [ ] `asyncio.timeout()` used instead of `asyncio.wait_for()` — **Warning**
+- [ ] `except*` / `ExceptionGroup` used when handling errors from concurrent async tasks — **Suggestion**
+- [ ] `match`/`case` considered for complex `if/elif` chains dispatching on type or structure — **Suggestion**
 
 ## Output format
 

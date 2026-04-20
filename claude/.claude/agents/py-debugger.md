@@ -34,6 +34,8 @@ You are a Python debugging specialist focused on root cause analysis.
 | Works locally, fails in CI | Environment diff — Python version, env vars, system deps |
 | Intermittent test failures | Shared mutable state, test ordering, async race condition |
 | Hangs or slow | Blocking I/O on async loop, missing `await`, N+1 queries |
+| `ExceptionGroup` raised | Multiple concurrent tasks failed — iterate `eg.exceptions`, use `except*` to handle by type |
+| Traceback points inside sub-expression | Python 3.11+ fine-grained location; the arrow is exact, not the whole line |
 
 ### Step 3: Inspect relevant state
 

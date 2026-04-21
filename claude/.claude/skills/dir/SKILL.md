@@ -46,10 +46,16 @@ Output the report in this exact format:
 ```
 **Directory:** <absolute path>
 **Project:** <type from step 2>
-**Branch:** <branch name> (<clean> or <N files changed>)
+**Branch:** <branch name>
+
+Modified files:
+  M path/to/changed-file.go
+  ?? path/to/untracked-file.go
 ```
 
-If not in a git repo, omit the Branch line.
+If there are no modified or untracked files, replace the file list with `(clean)`.
+
+If not in a git repo, omit the Branch line and the modified files section.
 
 ### 5. Verify
 

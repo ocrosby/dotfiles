@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # PostToolUse lint hook — runs after Edit/Write tool calls
-# Exit 0: clean (silent), exit non-zero: lint issues found (output shown to Claude)
+# Exit 0: clean (silent), exit non-zero: lint issues found (output on stderr shown in Claude Code UI)
 #
 # After stowing, make executable: chmod +x ~/.claude/hooks/lint.sh
 set -uo pipefail
@@ -19,8 +19,8 @@ case "${FILE##*.}" in
   py)
     echo "$(date -u +%FT%TZ) $HOOK py: $FILE" >> "$LOG"
     command -v ruff &>/dev/null || exit 0
-    echo "$HOOK ruff: checking $FILE"
-    ruff check --quiet "$FILE" && ruff format --check --quiet "$FILE"
+    echo "$HOOK ruff: checking $FILE" >&2
+    ruff check --quiet "$FILE" >&2 && ruff format --check --quiet "$FILE" >&2
     ;;
   go)
     echo "$(date -u +%FT%TZ) $HOOK go: $FILE" >> "$LOG"
@@ -42,12 +42,12 @@ case "${FILE##*.}" in
         LINT_MINOR=$(echo "$LINT_BUILD_GO" | cut -d. -f2 | sed 's/[^0-9].*//')
         MOD_MINOR=$(echo "$MOD_GO_VERSION" | cut -d. -f2 | sed 's/[^0-9].*//')
         if [[ -n "$LINT_MINOR" && -n "$MOD_MINOR" && "$LINT_MINOR" -lt "$MOD_MINOR" ]]; then
-          echo "$HOOK ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}."
-          echo "golangci-lint will not run and lint issues will reach CI undetected."
-          echo ""
-          echo "Fix: reinstall golangci-lint using your current Go version:"
-          echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
-          echo "  (or: task deps  if the project has a Taskfile)"
+          echo "$HOOK ERROR: golangci-lint was built with go${LINT_BUILD_GO} but go.mod declares go ${MOD_GO_VERSION}." >&2
+          echo "golangci-lint will not run and lint issues will reach CI undetected." >&2
+          echo "" >&2
+          echo "Fix: reinstall golangci-lint using your current Go version:" >&2
+          echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" >&2
+          echo "  (or: task deps  if the project has a Taskfile)" >&2
           exit 1
         fi
       fi
@@ -59,39 +59,39 @@ case "${FILE##*.}" in
       else
         REL_PKG="${PKG_DIR#${MODULE_ROOT}/}"
       fi
-      echo "$HOOK golangci-lint: checking ./$REL_PKG"
-      cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG"
+      echo "$HOOK golangci-lint: checking ./$REL_PKG" >&2
+      cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG" >&2
     else
-      echo "$HOOK WARNING: golangci-lint not found — install it to catch lint issues before CI:"
-      echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest"
-      cd "$MODULE_ROOT" && go vet ./...
+      echo "$HOOK WARNING: golangci-lint not found — install it to catch lint issues before CI:" >&2
+      echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" >&2
+      cd "$MODULE_ROOT" && go vet ./... >&2
     fi
     ;;
   lua)
     echo "$(date -u +%FT%TZ) $HOOK lua: $FILE" >> "$LOG"
     # Run stylua first; also run luacheck if available
     if command -v stylua &>/dev/null; then
-      echo "$HOOK stylua: checking $FILE"
-      stylua --check "$FILE" || exit 1
+      echo "$HOOK stylua: checking $FILE" >&2
+      stylua --check "$FILE" >&2 || exit 1
     fi
     if command -v luacheck &>/dev/null; then
-      echo "$HOOK luacheck: checking $FILE"
-      luacheck --quiet "$FILE"
+      echo "$HOOK luacheck: checking $FILE" >&2
+      luacheck --quiet "$FILE" >&2
     fi
     ;;
   feature)
     command -v gherkin-lint &>/dev/null || exit 0
-    echo "$HOOK gherkin-lint: checking $FILE"
-    gherkin-lint "$FILE"
+    echo "$HOOK gherkin-lint: checking $FILE" >&2
+    gherkin-lint "$FILE" >&2
     ;;
   toml)
     if [[ "$(basename "$FILE")" == "pyproject.toml" ]]; then
       command -v uv &>/dev/null || exit 0
       PROJ_DIR="$(dirname "$FILE")"
       [[ -f "$PROJ_DIR/uv.lock" ]] || exit 0
-      echo "$HOOK uv lock --check: verifying lockfile is in sync with pyproject.toml"
-      if ! (cd "$PROJ_DIR" && uv lock --check 2>&1); then
-        echo "$HOOK ERROR: uv.lock is out of sync. Run: uv lock"
+      echo "$HOOK uv lock --check: verifying lockfile is in sync with pyproject.toml" >&2
+      if ! (cd "$PROJ_DIR" && uv lock --check 2>&1 >&2); then
+        echo "$HOOK ERROR: uv.lock is out of sync. Run: uv lock" >&2
         exit 1
       fi
     fi
@@ -101,14 +101,14 @@ case "${FILE##*.}" in
     case "$FILE" in
       */.github/workflows/*)
         if command -v actionlint &>/dev/null; then
-          echo "$HOOK actionlint: checking $FILE"
-          actionlint "$FILE"
+          echo "$HOOK actionlint: checking $FILE" >&2
+          actionlint "$FILE" >&2
         fi
         ;;
       *)
         if command -v yamllint &>/dev/null; then
-          echo "$HOOK yamllint: checking $FILE"
-          yamllint -d '{extends: relaxed, rules: {line-length: {max: 120}}}' "$FILE"
+          echo "$HOOK yamllint: checking $FILE" >&2
+          yamllint -d '{extends: relaxed, rules: {line-length: {max: 120}}}' "$FILE" >&2
         fi
         ;;
     esac

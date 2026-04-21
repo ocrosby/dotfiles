@@ -83,6 +83,48 @@ After pushing (`git push -u origin <branch>`), run `gh pr create` to open a new 
 - Read any relevant files needed to write an accurate commit message and PR description
 - Identify the type of change: new feature, bug fix, refactor, etc.
 
+### 1.5. Group Changes into PRs
+
+Analyze whether the working-tree changes span multiple conceptual areas. A group is a set of files that share the same intent and a single conventional-commit type+scope.
+
+**Split signals** — treat these as separate groups:
+- Different commit types (e.g., `feat` vs `fix` vs `docs` vs `chore`)
+- Different scopes within the same type (e.g., `feat(auth)` vs `feat(api)`)
+- Files that are logically unrelated (e.g., a new CLI flag + an unrelated bug fix + doc updates)
+- Changes in independent modules that have no runtime dependency on each other
+
+**Keep together** — do NOT split when:
+- All changed files implement the same feature end-to-end (handler + model + test for one feature)
+- A fix and its test live in the same scope
+- A refactor touches multiple files but has a single unified intent
+
+**If a single group covers all changes**, proceed as one PR (existing behavior).
+
+**If multiple groups are identified**, present the proposed split to the user:
+
+```
+I found 3 conceptual groups in the working tree. I'll ship them as separate PRs:
+
+  1. feat(auth): add OAuth2 token refresh  →  feature/add-oauth2-token-refresh
+     Files: internal/auth/token.go, internal/auth/token_test.go
+
+  2. fix(api): correct 404 on missing resource  →  hotfix/fix-404-on-missing-resource
+     Files: internal/api/handler.go
+
+  3. docs: update README with new auth flow  →  feature/update-readme-auth-flow
+     Files: README.md
+
+Proceed with all 3, or adjust the grouping?
+```
+
+Wait for explicit user confirmation before proceeding. The user may regroup, merge, or drop entries.
+
+Once confirmed, process each group sequentially through steps 2–9. For each group:
+- Stage **only the files in that group** — never `git add -A` across groups
+- Create its own branch from the latest `main`
+- Commit, push, and open a PR for that group
+- Report the PR URL before starting the next group
+
 ### 2. Pre-flight: Lint
 
 Before touching git, run the project's lint/format checks. Detect what's available and run all that apply:
@@ -252,3 +294,7 @@ Report the pushed commit hash and message. Do not open a PR.
 - Use the conventional-commits rule for all commit messages
 - If the current branch is active and unmerged, always commit to it — never create a new branch
 - If the current branch has already been merged into main, check out main and start a fresh branch — never commit to a merged branch
+- In multi-PR mode, always branch each group from the latest `main` — never base one group's branch on another group's branch
+- In multi-PR mode, never stage files from a different group — one group's files must not appear in another group's commit
+- Lint and tests must pass before the first group is committed; do not re-run them between groups unless a group's files include build or config changes that could affect them
+- `-m` always ships as a single commit to main regardless of how many groups are detected — multi-PR grouping does not apply

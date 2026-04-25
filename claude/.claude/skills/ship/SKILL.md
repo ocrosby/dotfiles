@@ -11,7 +11,7 @@ Use this skill when the user wants to ship work on a new branch and open a pull 
 ## Usage
 
 ```
-/ship                                  # infer everything from the diff, confirm before proceeding
+/ship                                  # infer everything from the diff and proceed automatically
 /ship <branch-name>                    # use this name, infer prefix from commit type
 /ship feature <branch-name>           # force feature/ prefix
 /ship hotfix <branch-name>            # force hotfix/ prefix
@@ -26,7 +26,7 @@ Use this skill when the user wants to ship work on a new branch and open a pull 
 
 An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 
-**`-m` flag**: skips branch creation, PR creation, and the branch-name confirmation step. Commits directly to `main` and pushes. Use for trivial changes (docs, config, typos) that do not need review.
+**`-m` flag**: skips branch creation and PR creation. Commits directly to `main` and pushes. Use for trivial changes (docs, config, typos) that do not need review.
 
 ## Workflow
 
@@ -162,7 +162,7 @@ Run the project's test suite. Detect what's available and run all that apply:
 
 **If any tests fail: stop, report the failures, and do not proceed.** The user must fix failing tests before shipping. Do not open a PR with a broken test suite.
 
-### 4. Confirm Branch Name
+### 4. Derive Branch Name
 
 Derive the branch prefix from the conventional commit type of the changes:
 
@@ -173,8 +173,7 @@ Derive the branch prefix from the conventional commit type of the changes:
 | anything else (`refactor`, `chore`, `docs`, etc.) | `feature/` |
 
 - If the user passed `feature` or `hotfix` explicitly, use that — it overrides the inferred prefix
-- Propose a full branch name (e.g., `feature/add-user-auth`, `hotfix/fix-null-pointer`)
-- Ask for confirmation before proceeding — **always end the message with an explicit prompt such as: "Confirm this branch name to proceed, or suggest an alternative."** The user must not have to guess that you are waiting.
+- Derive a full branch name (e.g., `feature/add-user-auth`, `hotfix/fix-null-pointer`) and proceed directly to Step 5 — do not ask for confirmation
 
 ### 5. Create the Branch from Latest Main
 

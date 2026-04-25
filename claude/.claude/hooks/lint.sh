@@ -60,7 +60,26 @@ case "${FILE##*.}" in
         REL_PKG="${PKG_DIR#${MODULE_ROOT}/}"
       fi
       echo "$HOOK golangci-lint: checking ./$REL_PKG" >&2
-      cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG" >&2
+      LINT_OUT=$(cd "$MODULE_ROOT" && golangci-lint run "./$REL_PKG" 2>&1)
+      LINT_EXIT=$?
+      if [[ $LINT_EXIT -ne 0 ]]; then
+        CONFIG_FILE=$(find "$MODULE_ROOT" -maxdepth 1 -name ".golangci*" | head -1)
+        CONFIG_FILE="${CONFIG_FILE:-$MODULE_ROOT/.golangci.yml}"
+        # Detect golangci-lint v2 config error: formatter listed under linters
+        if echo "$LINT_OUT" | grep -qE "can't load config:.*is a formatter"; then
+          BAD_NAME=$(echo "$LINT_OUT" | grep -oE "[a-z]+ is a formatter" | awk '{print $1}' | head -1)
+          echo "$HOOK ERROR: '${BAD_NAME}' is a formatter in golangci-lint v2 — it cannot appear under linters.enable." >&2
+          echo "Fix: move '${BAD_NAME}' from linters.enable to formatters.enable in ${CONFIG_FILE}" >&2
+        # Detect golangci-lint v2 config error: linter name removed or renamed
+        elif echo "$LINT_OUT" | grep -qE "unknown linters:"; then
+          BAD_NAMES=$(echo "$LINT_OUT" | grep -oE "unknown linters: '[^']+'" | grep -oE "'[^']+'")
+          echo "$HOOK ERROR: unknown linter(s) in ${CONFIG_FILE}: ${BAD_NAMES}" >&2
+          echo "These were likely removed or renamed in golangci-lint v2. Run: golangci-lint help linters" >&2
+        else
+          echo "$LINT_OUT" >&2
+        fi
+        exit $LINT_EXIT
+      fi
     else
       echo "$HOOK WARNING: golangci-lint not found — install it to catch lint issues before CI:" >&2
       echo "  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest" >&2

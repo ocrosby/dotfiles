@@ -12,6 +12,12 @@ Apply this principle consistently in every session:
 
 Code that loses its reasoning becomes legacy code. Every interaction should add clarity about *why*, not just *what*.
 
+# Task Tracking
+
+When working on complex tasks (multi-step implementations, multi-file changes, bug hunts, refactors — anything where tracking progress adds value), create a `TODO.md` file at the root of the current git repo with a checklist of planned steps. Check off items as they are completed.
+
+Always ensure `TODO.md` is listed in the repo's `.gitignore`. If it isn't, add it as part of the first write.
+
 # Commit Messages
 
 Always use Conventional Commits: `<type>(<scope>): <description>` — lowercase, imperative mood, no period.

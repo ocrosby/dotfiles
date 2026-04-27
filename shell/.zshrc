@@ -48,3 +48,13 @@ alias setup-dev-env="source ~/.zsh.setup"
 
 unset VIMRUNTIME
 
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/omar/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+export OPENCODE_PROVIDER="anthropic"
+export OPENCODE_MODEL="claude-3-5-sonnet-20241022"
+
+# ────────[ Zoxide ]────────
+eval "$(zoxide init zsh)"

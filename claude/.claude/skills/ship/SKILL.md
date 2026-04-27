@@ -1,5 +1,5 @@
 ---
-description: Creates a feature or hotfix branch, commits staged changes, pushes to remote, and opens a detailed PR against main. Supports -m to commit directly to main instead.
+description: Creates a feature or hotfix branch, commits staged changes, pushes to remote, and opens a detailed PR against main. Supports -m to commit directly to main, or -p to commit a patch fix directly to main.
 triggers:
   - /ship
 ---
@@ -17,6 +17,7 @@ Use this skill when the user wants to ship work on a new branch and open a pull 
 /ship hotfix <branch-name>            # force hotfix/ prefix
 /ship [feature|hotfix] <branch-name> <base-branch>  # override base branch (default: main)
 /ship -m                               # commit and push directly to main — no branch, no PR
+/ship -p                               # patch release: commit directly to main, force fix: commit type
 ```
 
 **Prefix inference** (when not explicitly provided):
@@ -28,13 +29,15 @@ An explicit `feature` or `hotfix` argument always overrides the inferred prefix.
 
 **`-m` flag**: skips branch creation and PR creation. Commits directly to `main` and pushes. Use for trivial changes (docs, config, typos) that do not need review.
 
+**`-p` flag** (patch release): identical to `-m` but the commit message must use the `fix:` conventional-commit type regardless of what the diff would otherwise suggest. Use to trigger a patch release from `main` without going through a PR.
+
 ## Workflow
 
 ### 0. Detect Active Ship Branch
 
 Before anything else, run `git branch --show-current` to check the current branch.
 
-**If `-m` was passed**: skip to the [Direct-to-Main Workflow](#direct-to-main-workflow) section — do not run steps 4, 5, 8, or 9.
+**If `-m` or `-p` was passed**: skip to the [Direct-to-Main Workflow](#direct-to-main-workflow) section — do not run steps 4, 5, 8, or 9.
 
 - If the current branch **is** `main` or `master`, run the full workflow (steps 1–9).
 - If the current branch is **not** `main` or `master`, determine the state of the remote branch before proceeding:
@@ -244,7 +247,7 @@ Always output the PR URL at the end so the user can open it directly.
 
 ## Direct-to-Main Workflow
 
-**Only run this section when `-m` is passed. Skip it otherwise.**
+**Only run this section when `-m` or `-p` is passed. Skip it otherwise.**
 
 ### M1. Ensure on Main
 
@@ -268,6 +271,8 @@ Run Steps 2 and 3 exactly as in the standard workflow. **If either fails: stop a
 
 Stage relevant files and write a Conventional Commit message (same rules as Step 6).
 
+**If `-p` was passed**: the commit message must use the `fix:` type, regardless of what the diff would otherwise suggest. The scope and description still come from the diff. This is what triggers a patch release from `main`.
+
 ```bash
 git add <files>
 git commit -m "..."
@@ -286,8 +291,10 @@ Report the pushed commit hash and message. Do not open a PR.
 ## Rules
 
 - Never force-push or use `--no-verify`
-- Without `-m`: never commit to `main` or `master` directly
+- Without `-m` or `-p`: never commit to `main` or `master` directly
 - With `-m`: commit directly to `main` — no branch, no PR
+- With `-p`: commit directly to `main` and force the commit type to `fix:` to trigger a patch release — no branch, no PR
+- `-m` and `-p` are mutually exclusive — if both are passed, stop and ask the user which one they meant
 - If the working tree is clean, tell the user there's nothing to ship
 - If there are untracked files that seem relevant, ask whether to include them
 - Use the conventional-commits rule for all commit messages
@@ -296,4 +303,4 @@ Report the pushed commit hash and message. Do not open a PR.
 - In multi-PR mode, always branch each group from the latest `main` — never base one group's branch on another group's branch
 - In multi-PR mode, never stage files from a different group — one group's files must not appear in another group's commit
 - Lint and tests must pass before the first group is committed; do not re-run them between groups unless a group's files include build or config changes that could affect them
-- `-m` always ships as a single commit to main regardless of how many groups are detected — multi-PR grouping does not apply
+- `-m` and `-p` always ship as a single commit to main regardless of how many groups are detected — multi-PR grouping does not apply

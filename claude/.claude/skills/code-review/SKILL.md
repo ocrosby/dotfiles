@@ -1,7 +1,7 @@
 ---
 description: Runs a structured code review of changed files by delegating to language-specialist reviewer agents.
 triggers:
-  - /review
+  - /code-review
 ---
 
 # Code Review

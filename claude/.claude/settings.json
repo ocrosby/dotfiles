@@ -127,6 +127,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/protect-main.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/conflict-check.sh"
           }
         ]
       },

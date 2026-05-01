@@ -21,6 +21,29 @@ case "${FILE##*.}" in
     command -v ruff &>/dev/null || exit 0
     echo "$HOOK ruff: checking $FILE" >&2
     ruff check --quiet "$FILE" >&2 && ruff format --check --quiet "$FILE" >&2
+    # Complexity check — skip test files (they're excluded from CI complexity gate too)
+    [[ "$FILE" == */test_*.py || "$FILE" == *_test.py || "$FILE" == */tests/* ]] && exit 0
+    # Walk up to the project root (where pyproject.toml lives)
+    PROJ_DIR="$(dirname "$FILE")"
+    while [[ "$PROJ_DIR" != "/" && ! -f "$PROJ_DIR/pyproject.toml" ]]; do
+      PROJ_DIR="$(dirname "$PROJ_DIR")"
+    done
+    [[ ! -f "$PROJ_DIR/pyproject.toml" ]] && exit 0
+    # Skip if cyclo isn't installed in this project
+    (cd "$PROJ_DIR" && uv run cyclo --help &>/dev/null 2>&1) || exit 0
+    # Read threshold from pyproject.toml [tool.ruff.lint.mccabe] max-complexity, default 7
+    MAX_C=$(grep -A2 '\[tool\.ruff\.lint\.mccabe\]' "$PROJ_DIR/pyproject.toml" 2>/dev/null \
+      | grep 'max-complexity' | grep -oE '[0-9]+' | head -1)
+    MAX_C="${MAX_C:-7}"
+    FILE_DIR="$(dirname "$FILE")"
+    REL_DIR="${FILE_DIR#${PROJ_DIR}/}"
+    echo "$HOOK cyclo: checking complexity (max $MAX_C) in $REL_DIR" >&2
+    CYCLO_OUT=$(cd "$PROJ_DIR" && uv run cyclo -m "$MAX_C" "$FILE_DIR" 2>&1)
+    CYCLO_EXIT=$?
+    if [[ $CYCLO_EXIT -ne 0 ]]; then
+      echo "$CYCLO_OUT" >&2
+      exit $CYCLO_EXIT
+    fi
     ;;
   go)
     echo "$(date -u +%FT%TZ) $HOOK go: $FILE" >> "$LOG"

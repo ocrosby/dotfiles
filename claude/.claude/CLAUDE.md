@@ -22,3 +22,17 @@ Always ensure `TODO.md` is listed in the repo's `.gitignore`. If it isn't, add i
 
 Always use Conventional Commits: `<type>(<scope>): <description>` — lowercase, imperative mood, no period.
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`. Breaking changes use `!` and a `BREAKING CHANGE:` footer.
+
+# PR Discipline
+
+One PR = one `type(scope)` pair. Before creating a branch, committing, or pushing, ask: "Can I describe all of these changes with a single conventional commit subject line?" If the answer contains "and" — there are mixed concerns that must be split.
+
+**When starting work:** name the branch after the intended commit (e.g. `chore/remove-junitxml`, `test/bdd-v2-steps`) before touching any files. Don't let unrelated changes accumulate on the same branch.
+
+**When mixed concerns are detected mid-stream:**
+1. Stash all uncommitted changes: `git stash push -u -m "split: <description>"`
+2. Create one branch from `main` per concern
+3. Apply only the relevant files to each branch from the stash
+4. Each branch gets its own PR targeting `main`
+
+**Before pushing:** run `git fetch origin main` and check whether the files you changed also changed on main since the branch diverged. If they did, rebase before opening the PR: `git rebase origin/main`.

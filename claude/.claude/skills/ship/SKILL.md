@@ -283,7 +283,7 @@ Stage relevant files and write a Conventional Commit message (same rules as Step
 
 ```bash
 git add <files>
-git commit -m "..."
+ALLOW_MAIN_COMMIT=1 git commit -m "..."
 ```
 
 ### M4. Push to Main

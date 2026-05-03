@@ -155,6 +155,12 @@ case "${FILE##*.}" in
         ;;
     esac
     ;;
+  sh)
+    echo "$(date -u +%FT%TZ) $HOOK sh: $FILE" >> "$LOG"
+    command -v shellcheck &>/dev/null || exit 0
+    echo "$HOOK shellcheck: checking $FILE" >&2
+    shellcheck "$FILE" >&2
+    ;;
   *)
     exit 0
     ;;

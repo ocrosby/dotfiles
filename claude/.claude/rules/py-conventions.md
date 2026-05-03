@@ -20,17 +20,7 @@ paths:
 
 ## Design Patterns
 
-Use Gang of Four patterns where they reduce complexity:
-
-- Strategy for variant behavior (prefer callables or Protocol classes)
-- Adapter to wrap external clients and SDKs
-- Facade to simplify multi-step workflows
-- Factory for object creation with complex setup
-- Observer/Pub-Sub for event-driven decoupling
-- Decorator for cross-cutting concerns (logging, caching, retry)
-- Command for encapsulating operations
-
-Do not force a pattern where a simple function will do.
+See `rules/design-patterns-application.md` for GoF pattern guidance including Python-specific notes for each pattern.
 
 ## Architecture (Server Applications)
 

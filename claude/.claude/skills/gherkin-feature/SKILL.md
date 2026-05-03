@@ -47,14 +47,8 @@ paths:
 - Configure environment (base URLs, credentials, browser setup)
 - Add custom parameter types for domain concepts
 
-### 6. Review Checklist
+### 6. Review
 
-- [ ] Feature describes behavior, not implementation
-- [ ] Each scenario is independent — no ordering dependencies
-- [ ] Steps are declarative — no UI mechanics or implementation details
-- [ ] One When step per scenario
-- [ ] Background contains only Given steps shared by all scenarios
-- [ ] Scenario Outlines have meaningful variation in Examples
-- [ ] Step definitions are thin — logic delegated to helpers
-- [ ] Tags applied for filtering (`@smoke`, `@slow`, domain tags)
-- [ ] Feature file ≤ 10 scenarios
+Invoke the `gherkin-reviewer` agent on the new feature file and step definitions. Fix all Critical and Warning findings before marking the task complete.
+
+Run `/code-review` before shipping to catch any issues.

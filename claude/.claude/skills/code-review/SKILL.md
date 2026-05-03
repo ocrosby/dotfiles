@@ -11,13 +11,13 @@ Use this skill when you want an explicit, structured review of changed or specif
 ## Usage
 
 ```
-/review                    # review all files changed since last commit
-/review <file-or-glob>     # review specific files
-/review HEAD~3             # review all changes in the last 3 commits
-/review -f                  # review + automatically fix all Must Fix and Should Fix findings
-/review -f <file-or-glob>   # same, scoped to specific files
-/review -fc                 # review + fix + repeat until no findings remain
-/review -fc <file-or-glob>  # same, scoped to specific files
+/code-review                    # review all files changed since last commit
+/code-review <file-or-glob>     # review specific files
+/code-review HEAD~3             # review all changes in the last 3 commits
+/code-review -f                 # review + automatically fix all Must Fix and Should Fix findings
+/code-review -f <file-or-glob>  # same, scoped to specific files
+/code-review -fc                # review + fix + repeat until no findings remain
+/code-review -fc <file-or-glob> # same, scoped to specific files
 ```
 
 - `-f` — fix all findings once, then stop

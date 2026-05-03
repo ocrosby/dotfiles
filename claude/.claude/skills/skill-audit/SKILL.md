@@ -70,3 +70,7 @@ Do not batch multiple skills into one commit — it makes it harder to revert a 
 - Do not skip any skill file found in step 1 — a partial audit is misleading
 - Do not auto-fix without confirming with the user first
 - Report findings even if the skill is rarely used — silent debt accumulates
+
+## Related
+
+For a system-wide audit of how all components (hooks, rules, agents, skills, settings) integrate with each other, use `/audit` instead — it covers inter-component correctness, redundancy, and coverage gaps, not individual skill file quality.

@@ -1,10 +1,7 @@
 ---
-description: Enforces test-driven development when writing, modifying, or fixing code. Auto-invoked for implementation tasks.
-paths:
-  - "**/*.py"
-  - "**/*.go"
-  - "**/*.lua"
-  - "**/*.feature"
+description: Deep TDD reference — red-green-refactor cycle, language-specific tooling, and anti-patterns. Auto-triggered guidance lives in rules/tdd.md; invoke /tdd for the full reference.
+triggers:
+  - /tdd
 ---
 
 # Test-Driven Development

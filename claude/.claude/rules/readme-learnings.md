@@ -41,8 +41,8 @@ Do not pad entries. If the lesson can be stated in one sentence, use one sentenc
 
 1. Read the current `README.md`
 2. Add the new entry under the appropriate section (or create a new section if none fits)
-3. Commit with: `docs(claude): add learning — <one-line summary>`
-4. Push to main immediately — do not batch learnings across sessions
+3. Run `/ship -m` to commit directly to main and push without a PR — use commit message `docs(claude): add learning — <one-line summary>`
+4. Do not batch learnings across sessions — ship immediately after each session that produced a new learning
 
 ## Sections in README.md
 

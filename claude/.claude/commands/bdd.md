@@ -52,6 +52,7 @@ Run a BDD feature file's pytest stub with the correct environment and region.
    ```bash
    find features/ -name "<feature_name>.feature" 2>/dev/null
    ```
+   - If `features/` does not exist in the current directory: report "This command requires a SUN acceptance test repo layout (`features/` and `tests/bdd/`). Not found in current directory." and stop.
    - If zero results: report "No feature file named `<feature_name>.feature` found under features/." and stop.
    - If multiple results: list them and ask the user which one to use.
 

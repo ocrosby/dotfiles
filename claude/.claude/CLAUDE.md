@@ -1,3 +1,9 @@
+# Development Workflow
+
+Run `/workflow` to see the complete development workflow reference (architect → implement → review → ship).
+
+---
+
 # Context-First Development
 
 The mark of a high-quality codebase is that it explains its *reasoning*, not just its behavior — it communicates **why**, not just **what**.

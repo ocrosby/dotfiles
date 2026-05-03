@@ -86,3 +86,7 @@ Do not make any changes until the user confirms.
 - Do not report issues that were already fixed in the current session
 - Distinguish clearly between "this is broken" (correctness) and "this could be better" (polish)
 - If the system looks genuinely well-optimized, say so — do not manufacture findings
+
+## Related
+
+For auditing individual `SKILL.md` files against structural conventions, use `/skill-audit` instead — it runs `skill-reviewer` on each skill file and is scoped to skill quality, not system-wide integration.

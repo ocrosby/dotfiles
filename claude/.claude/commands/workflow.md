@@ -14,7 +14,7 @@ Invoke for anything beyond a trivial change: new packages, significant new abstr
 ### 2. `/*-feature` — implement with TDD
 Use `/go-feature`, `/py-feature`, `/nvim-feature`, or `/gherkin-feature`. The `tdd` rule auto-invokes `/test-driven-development` (red-green-refactor). The lint hook runs automatically after every file save.
 
-### 3. `/review` — catch issues before shipping
+### 3. `/code-review` — catch issues before shipping
 Delegates to `go-reviewer`, `py-reviewer`, `nvim-reviewer`, or `gherkin-reviewer` agents for deep, criteria-driven review. The `review-on-implement` rule suggests this after significant implementation.
 
 ### 4. `/ship` — branch, commit, push, open PR
@@ -41,7 +41,7 @@ Checkout main, pull latest, delete merged branches.
 | Deprecated API calls | `/migrate` | Suggested by `migrate-suggest` rule when old patterns detected |
 | Structural design issues | `/refactor` | Go, Python, and Neovim supported |
 | Missing documentation | `/go-docs` / `/py-docs` / `/nvim-docs` / `/gherkin-docs` | Suggested by `docs-suggest` rule when public API added without docs |
-| Post-review code quality | `/simplify` | After `/review` to apply fixes for reuse, quality, and efficiency |
+| Post-review code quality | `/simplify` | After `/code-review` to apply fixes for reuse, quality, and efficiency (team plugin — not in dotfiles) |
 | Go performance analysis | `/go-bench` | When benchmarking Go code or investigating allocations and throughput |
 
 ---
@@ -90,6 +90,6 @@ These run without being asked:
 | Rule | Fires when | Suggests |
 |---|---|---|
 | `tdd` | Implementing new features or bug fixes | `/test-driven-development` skill |
-| `review-on-implement` | After significant implementation | `/review` |
+| `review-on-implement` | After significant implementation | `/code-review` |
 | `docs-suggest` | Public API added without documentation | `/go-docs`, `/py-docs`, or `/nvim-docs` |
 | `migrate-suggest` | Deprecated patterns detected in edited files | `/migrate` |

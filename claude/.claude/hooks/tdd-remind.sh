@@ -25,4 +25,9 @@ case "$FILE" in
   */tests/*|*/test/*) exit 0 ;;
 esac
 
+# Skip Neovim config files — pure configuration, no testable behavior
+case "$FILE" in
+  */lua/config/*.lua|*/lua/plugins/*.lua|*/lsp/*.lua|*/after/ftplugin/*.lua) exit 0 ;;
+esac
+
 echo "[hook: tdd-remind] TDD REQUIRED: Write a failing test, run it, show failure output — THEN edit ${FILE}. Exceptions: /migrate, /refactor, or purely mechanical renames only."

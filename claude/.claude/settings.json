@@ -1,4 +1,5 @@
 {
+  "autoApprove": true,
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [

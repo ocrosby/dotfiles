@@ -123,9 +123,17 @@ Proceed with all 3, or adjust the grouping?
 Wait for explicit user confirmation before proceeding. The user may regroup, merge, or drop entries.
 
 Once confirmed, process each group sequentially through steps 2–9. For each group:
-- Stage **only the files in that group** — never `git add -A` across groups
 - Create its own branch from the latest `main`
-- Commit, push, and open a PR for that group
+- Apply only this group's files to the working tree
+- **Isolation check — build**: compile the affected module(s) to verify this group builds against `main` alone:
+  - Go workspace: `cd <module-dir> && go build ./...` for each module touched by the group
+  - Single Go module: `go build ./...`
+  - Other languages: run the equivalent compile/type-check step
+  - If the build fails with errors in files **outside** this group: the group has an undeclared dependency on another group's changes. Document it in the PR description — name the other PR that must merge first — and proceed. Never push a dependently-broken branch without this warning.
+  - If the build fails with errors in files **inside** this group: the group itself is broken — stop and fix before continuing.
+- **Isolation check — tests**: run the race detector for the affected module(s) only (not the full workspace): `cd <module-dir> && go test -race -count=1 ./...`
+- Stage **only the files in that group** — never `git add -A` across groups
+- Commit, push, and open a PR for that group; if a dependency was detected, add a "Depends on #N" line to the PR body
 - Report the PR URL before starting the next group
 
 ### 2. Pre-flight: Lint
@@ -302,5 +310,5 @@ Report the pushed commit hash and message. Do not open a PR.
 - If the current branch has already been merged into main, check out main and start a fresh branch — never commit to a merged branch
 - In multi-PR mode, always branch each group from the latest `main` — never base one group's branch on another group's branch
 - In multi-PR mode, never stage files from a different group — one group's files must not appear in another group's commit
-- Lint and tests must pass before the first group is committed; do not re-run them between groups unless a group's files include build or config changes that could affect them
+- Run the full lint and test suite once before the first group is committed. For each subsequent group, run the per-group isolation checks (build + module-scoped tests with `-race`) on the group's branch after applying its files and before staging. The full suite runs once; per-group isolation is a targeted build+test of only the affected modules.
 - `-m` and `-p` always ship as a single commit to main regardless of how many groups are detected — multi-PR grouping does not apply

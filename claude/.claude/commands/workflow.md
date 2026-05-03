@@ -5,17 +5,17 @@ Complete reference for the development workflow and when to use each skill, agen
 ## Standard Feature Workflow
 
 ```
-/architect → /*-feature (TDD) → /review → /ship → /main
+/architect → /*-feature (TDD) → /code-review → /ship → /main
 ```
 
 ### 1. `/architect` — design before implementing
 Invoke for anything beyond a trivial change: new packages, significant new abstractions, cross-cutting concerns. Routes to `go-architect`, `py-architect`, `nvim-architect`, or `gherkin-architect` based on language. Output: module map, dependency graph, public API surface, trade-offs. Capture decisions in `ARCHITECTURE.md`.
 
 ### 2. `/*-feature` — implement with TDD
-Use `/go-feature`, `/py-feature`, `/nvim-feature`, or `/gherkin-feature`. The `tdd` rule auto-invokes `/test-driven-development` (red-green-refactor). The lint hook runs automatically after every file save.
+Use `/go-feature`, `/py-feature`, `/nvim-feature`, or `/gherkin-feature`. The `tdd` rule auto-invokes `/tdd` (red-green-refactor). The lint hook runs automatically after every file save.
 
 ### 3. `/code-review` — catch issues before shipping
-Delegates to `go-reviewer`, `py-reviewer`, `nvim-reviewer`, or `gherkin-reviewer` agents for deep, criteria-driven review. The `review-on-implement` rule suggests this after significant implementation.
+Delegates to `go-reviewer`, `py-reviewer`, `nvim-reviewer`, or `gherkin-reviewer` agents for deep, criteria-driven review. Also routes to `rest-reviewer` when HTTP handler patterns are detected. The `review-on-implement` rule suggests this after significant implementation.
 
 ### 4. `/ship` — branch, commit, push, open PR
 Pre-flight runs lint + tests. Validates conventional commit format. Never commits directly to main (hook enforced). Returns the PR URL.
@@ -43,6 +43,10 @@ Checkout main, pull latest, delete merged branches.
 | Missing documentation | `/go-docs` / `/py-docs` / `/nvim-docs` / `/gherkin-docs` | Suggested by `docs-suggest` rule when public API added without docs |
 | Post-review code quality | `/simplify` | After `/code-review` to apply fixes for reuse, quality, and efficiency (team plugin — not in dotfiles) |
 | Go performance analysis | `/go-bench` | When benchmarking Go code or investigating allocations and throughput |
+| Python performance analysis | `/py-bench` | When benchmarking Python code or investigating performance bottlenecks |
+| Design pattern decisions | `/patterns` | When designing architecture or reviewing structural code decisions |
+| Documentation review | `/doc-review` | After writing or updating public-facing docs |
+| Author or improve skills | `/skill-author` | When adding or modifying a Claude skill |
 
 ---
 
@@ -61,6 +65,7 @@ Use `/test-runner` to run the test suite and get a structured failure report wit
 
 ```
 /test-runner          # run tests in the current project
+/bdd <feature-file>   # run a Gherkin BDD feature file with the correct environment and region
 ```
 
 Or run directly when you need the raw output:
@@ -89,7 +94,7 @@ These run without being asked:
 
 | Rule | Fires when | Suggests |
 |---|---|---|
-| `tdd` | Implementing new features or bug fixes | `/test-driven-development` skill |
+| `tdd` | Implementing new features or bug fixes | `/tdd` skill |
 | `review-on-implement` | After significant implementation | `/code-review` |
 | `docs-suggest` | Public API added without documentation | `/go-docs`, `/py-docs`, or `/nvim-docs` |
 | `migrate-suggest` | Deprecated patterns detected in edited files | `/migrate` |

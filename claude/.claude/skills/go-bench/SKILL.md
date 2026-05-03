@@ -12,7 +12,7 @@ paths:
 
 - You suspect a function is slow and want to measure it
 - You made a performance change and want to verify improvement
-- The `/review` skill flagged missing benchmarks on a hot path
+- The `/code-review` skill flagged missing benchmarks on a hot path
 - You want to compare two implementations
 
 ## Workflow

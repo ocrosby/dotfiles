@@ -42,6 +42,7 @@ Checkout main, pull latest, delete merged branches.
 | Structural design issues | `/refactor` | Go, Python, and Neovim supported |
 | Missing documentation | `/go-docs` / `/py-docs` / `/nvim-docs` / `/gherkin-docs` | Suggested by `docs-suggest` rule when public API added without docs |
 | Post-review code quality | `/simplify` | After `/code-review` to apply fixes for reuse, quality, and efficiency (team plugin — not in dotfiles) |
+| REST API compliance | `/rest-review` | Review HTTP handlers for REST convention compliance (resource naming, status codes, statelessness) |
 | Go performance analysis | `/go-bench` | When benchmarking Go code or investigating allocations and throughput |
 | Python performance analysis | `/py-bench` | When benchmarking Python code or investigating performance bottlenecks |
 | Design pattern decisions | `/patterns` | When designing architecture or reviewing structural code decisions |
@@ -84,7 +85,7 @@ These run without being asked:
 
 | Trigger | What runs | Effect |
 |---|---|---|
-| Every file edit (Edit/Write) | `lint.sh` — ruff / go vet / stylua+luacheck | Shows lint errors for Claude to fix |
+| Every file edit (Edit/Write) | `lint.sh` — py: ruff; go: golangci-lint/go vet; lua: stylua+luacheck; sh: shellcheck; yaml: actionlint/yamllint; toml: uv lock --check; feature: gherkin-lint | Shows lint errors for Claude to fix |
 | Before every `git commit` | `protect-main.sh` — checks current branch | Blocks commits directly to main/master |
 | After every `git commit` | `commit-msg.sh` — validates conventional commits | Warns Claude to amend if format is wrong |
 
@@ -107,3 +108,4 @@ These run without being asked:
 |---|---|---|
 | Daily task journal | `/work` | Add, list, complete, and note tasks in a date-structured work log at `~/work/` |
 | Research and publish | `/here-now` | Research any topic via live web sources and publish a self-contained report to here.now — returns a live URL |
+| Orientation snapshot | `/dir` / `/pwd` | Report current directory, project type, and git branch |

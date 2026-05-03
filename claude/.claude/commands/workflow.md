@@ -98,3 +98,12 @@ These run without being asked:
 | `review-on-implement` | After significant implementation | `/code-review` |
 | `docs-suggest` | Public API added without documentation | `/go-docs`, `/py-docs`, or `/nvim-docs` |
 | `migrate-suggest` | Deprecated patterns detected in edited files | `/migrate` |
+
+---
+
+## Utilities
+
+| Tool | Command | Description |
+|---|---|---|
+| Daily task journal | `/work` | Add, list, complete, and note tasks in a date-structured work log at `~/work/` |
+| Research and publish | `/here-now` | Research any topic via live web sources and publish a self-contained report to here.now — returns a live URL |

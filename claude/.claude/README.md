@@ -180,3 +180,18 @@ Enabling `gopls-lsp`, `pyright-lsp`, and `lua-lsp` in the global `~/.claude/sett
 - `time.After` called inside a loop creates a new timer each iteration; a global deadline never triggers — call it once outside the loop
 
 ---
+
+## Planning Prompts
+
+Reusable prompts for common Claude Code workflows.
+
+### Discovery before building
+
+Use this before starting any non-trivial feature to align on problem, audience, and scope before writing code:
+
+> Before we start building, interview me about this:
+>
+> What is the core problem this solves?
+> Who is this for? What does success look like? What should this NOT do?
+>
+> Summarize it back to me before we write any code.

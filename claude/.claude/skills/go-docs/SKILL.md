@@ -1,7 +1,5 @@
 ---
 description: Generates and audits Go package documentation following godoc conventions.
-triggers:
-  - /go-docs
 paths:
   - "**/*.go"
 ---

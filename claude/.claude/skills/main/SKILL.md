@@ -1,7 +1,5 @@
 ---
 description: Checks out the main branch and pulls the latest changes from remote.
-triggers:
-  - /main
 ---
 
 # Main: Checkout and Pull Latest

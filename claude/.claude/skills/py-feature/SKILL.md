@@ -1,7 +1,5 @@
 ---
 description: Guides development of new Python features following hexagonal architecture and clean code principles.
-triggers:
-  - /py-feature
 paths:
   - "**/*.py"
 ---

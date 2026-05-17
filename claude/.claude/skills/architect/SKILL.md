@@ -1,7 +1,5 @@
 ---
 description: Designs application architecture by delegating to the appropriate language-specialist architect agent.
-triggers:
-  - /architect
 ---
 
 # Architect

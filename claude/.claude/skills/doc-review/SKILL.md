@@ -1,7 +1,5 @@
 ---
 description: Reviews documentation files against Write the Docs principles — structure, content quality, accuracy, accessibility, and UX copy — and reports findings by severity.
-triggers:
-  - /doc-review
 ---
 
 # Documentation Review

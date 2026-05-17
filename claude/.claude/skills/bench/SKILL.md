@@ -1,7 +1,5 @@
 ---
 description: Benchmarks code in the current project by routing to the appropriate language-specialist bench skill.
-triggers:
-  - /bench
 ---
 
 # Bench

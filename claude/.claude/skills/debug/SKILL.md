@@ -1,7 +1,5 @@
 ---
 description: Systematically triages and diagnoses bugs across Go, Python, Neovim, and Gherkin.
-triggers:
-  - /debug
 paths:
   - "**/*.go"
   - "**/*.py"

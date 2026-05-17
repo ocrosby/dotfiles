@@ -1,7 +1,5 @@
 ---
 description: Audits the Claude workflow system — reads every component and reports what's suboptimal with specific fixes, grouped by category and ordered by impact.
-triggers:
-  - /audit
 ---
 
 # Workflow Audit

@@ -1,7 +1,5 @@
 ---
 description: Guides structural refactoring of Go, Python, or Neovim code — improving design, layering, and clarity without changing behavior.
-triggers:
-  - /refactor
 paths:
   - "**/*.go"
   - "**/*.py"

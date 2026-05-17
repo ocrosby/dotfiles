@@ -1,7 +1,5 @@
 ---
 description: Generates living documentation from Gherkin feature files as readable Markdown summaries.
-triggers:
-  - /gherkin-docs
 paths:
   - "**/*.feature"
 ---

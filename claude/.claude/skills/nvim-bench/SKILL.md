@@ -1,7 +1,5 @@
 ---
 description: Write, run, and analyze Neovim plugin benchmarks. Use when benchmarking Lua plugin code, investigating startup regressions, comparing before/after, or profiling autocmd and handler latency.
-triggers:
-  - /nvim-bench
 paths:
   - "**/*.lua"
 ---

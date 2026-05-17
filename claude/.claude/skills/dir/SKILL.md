@@ -1,8 +1,5 @@
 ---
 description: Reports the current working directory with project context — language, type, and git status.
-triggers:
-  - /dir
-  - /pwd
 ---
 
 # Dir: Working Directory Report

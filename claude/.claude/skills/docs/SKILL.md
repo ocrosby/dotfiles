@@ -1,7 +1,5 @@
 ---
 description: Generates and audits documentation for the current project by routing to the appropriate language-specialist docs skill.
-triggers:
-  - /docs
 ---
 
 # Docs

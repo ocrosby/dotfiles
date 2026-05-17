@@ -1,7 +1,5 @@
 ---
 description: Analyzes code or a problem description and recommends applicable GoF design patterns with implementation sketches grounded in the code.
-triggers:
-  - /patterns
 ---
 
 # Pattern Advisor

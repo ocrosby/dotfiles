@@ -1,7 +1,5 @@
 ---
 description: Researches a topic using live web sources, synthesizes a structured report, and publishes it to here.now — returns a live URL.
-triggers:
-  - /here-now
 ---
 
 # Here Now: Research and Publish to here.now

@@ -1,7 +1,5 @@
 ---
 description: Deep TDD reference — red-green-refactor cycle, language-specific tooling, and anti-patterns. Auto-triggered guidance lives in rules/tdd.md; invoke /tdd for the full reference.
-triggers:
-  - /tdd
 ---
 
 # Test-Driven Development

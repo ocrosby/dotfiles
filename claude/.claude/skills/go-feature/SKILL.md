@@ -1,7 +1,5 @@
 ---
 description: Guides development of new Go features following clean architecture and idiomatic Go patterns.
-triggers:
-  - /go-feature
 paths:
   - "**/*.go"
 ---

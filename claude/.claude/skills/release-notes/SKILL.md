@@ -1,7 +1,5 @@
 ---
 description: Generates a changelog or release notes from conventional commits since the last tag, grouped by type. Use after merging to main when preparing a release.
-triggers:
-  - /release-notes
 ---
 
 # Release Notes

@@ -1,7 +1,5 @@
 ---
 description: Guides development of new REST API endpoints following OpenAPI-first design and REST conventions.
-triggers:
-  - /rest-feature
 paths:
   - "**/*.go"
   - "**/*.py"

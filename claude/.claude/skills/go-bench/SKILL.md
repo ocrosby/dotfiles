@@ -1,7 +1,5 @@
 ---
 description: Write, run, and analyze Go benchmarks. Use when benchmarking Go code, investigating performance regressions, comparing before/after, or analyzing allocations and throughput.
-triggers:
-  - /go-bench
 paths:
   - "**/*.go"
 ---

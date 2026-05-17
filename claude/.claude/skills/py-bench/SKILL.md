@@ -1,7 +1,5 @@
 ---
 description: Write, run, and analyze Python benchmarks. Use when benchmarking Python code, investigating performance regressions, comparing before/after, or profiling allocations and throughput.
-triggers:
-  - /py-bench
 paths:
   - "**/*.py"
 ---

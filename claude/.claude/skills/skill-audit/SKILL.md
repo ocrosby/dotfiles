@@ -1,7 +1,5 @@
 ---
 description: Audits all existing Claude skill files for structural quality, language durability, and consistency with rules and agents. Produces a prioritized findings report.
-triggers:
-  - /skill-audit
 ---
 
 # Skill Audit

@@ -1,7 +1,5 @@
 ---
 description: Identifies and replaces deprecated or outdated patterns across Go, Python, Neovim, and Gherkin.
-triggers:
-  - /migrate
 paths:
   - "**/*.go"
   - "**/*.py"

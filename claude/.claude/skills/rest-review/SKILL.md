@@ -1,7 +1,5 @@
 ---
 description: Reviews HTTP handler and route code for REST API convention compliance — resource naming, HTTP methods, status codes, statelessness, and caching.
-triggers:
-  - /rest-review
 ---
 
 # REST Review

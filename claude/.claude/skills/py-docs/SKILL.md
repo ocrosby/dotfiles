@@ -1,7 +1,5 @@
 ---
 description: Generates and audits Python documentation following Google-style docstring conventions.
-triggers:
-  - /py-docs
 paths:
   - "**/*.py"
 ---
